@@ -1,0 +1,64 @@
+<div class="row">
+  <h1>Lease Agreements</h1>
+</div>
+
+
+<div class="row justify-content-center">
+    <div class="col-md-9">
+        <table class="table table-striped">
+        <thead>
+            <tr>
+            <th scope="col">#</th>
+            <th scope="col" scope="col">Store Name</th>
+            <th scope="col" scope="col">Amount</th>
+            <th scope="col" scope="col">Start Date</th>
+            <th scope="col" scope="col">End Date</th>
+            <th>View</th>
+            <th>Payments</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let leaseAgreement of pagedList.pagedData">
+            <th scope="row">{{ leaseAgreement.leaseAgreementId }}</th>
+            <td>
+                {{ leaseAgreement.store?.storeName }}
+            </td>
+            <td>{{ leaseAgreement.leaseAmount }}</td>
+            <td>{{ leaseAgreement.leaseStartDate | date: "yyyy-MM-dd" }}</td>
+            <td>{{ leaseAgreement.leaseEndDate | date: "yyyy-MM-dd" }}</td>
+            <td>
+                <a class="btn btn-primary" routerLink="/lease-agreement/{{ leaseAgreement.storeId}}"
+                >View</a
+                >
+            </td>
+            <td>
+              <a class="btn btn-primary" routerLink="/lease-payments/{{ leaseAgreement.leaseAgreementId}}"
+              >View</a
+              >
+          </td>
+            </tr>
+        </tbody>
+        </table>
+        <div class="d-flex justify-content-between p-2">
+            <ngb-pagination
+        [collectionSize]="pagedList.totalItemsCount"
+        [(page)]="currentPage"
+        [pageSize]="pageSize"
+        (pageChange)="refreshLeaseAgreementList()"
+      >
+      </ngb-pagination>
+
+      <select
+        class="form-select"
+        style="width: auto"
+        [(ngModel)]="pageSize"
+        (ngModelChange)="refreshLeaseAgreementList()"
+      >
+        <option [ngValue]="10">10</option>
+        <option [ngValue]="50">50</option>
+        <option [ngValue]="100">100</option>
+      </select>
+        </div>
+
+    </div>
+</div>

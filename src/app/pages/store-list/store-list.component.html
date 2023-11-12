@@ -1,0 +1,93 @@
+<div class="row">
+  <h1>Stores list</h1>
+</div>
+
+<select
+  id="categoryId"
+  [(ngModel)]="categoryId"
+  (change)="refreshStoreList()"
+  class="form-select"
+>
+  <option value="0">All</option>
+  <option *ngFor="let selectItem of categories" [value]="selectItem.categoryId">
+    {{ selectItem.categoryName }}
+  </option>
+</select>
+
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="input-group">
+      <input
+        [(ngModel)]="searchTerm"
+        type="text"
+        class="form-control"
+        placeholder="Search..."
+        (keyup.enter)="refreshStoreList()"
+      />
+      <div class="input-group-append">
+        <button class="btn btn-primary" (click)="refreshStoreList()">
+          Search
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-md-9">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Store Name</th>
+          <th scope="col" scope="col">Category</th>
+          <th>View</th>
+          <th class="text-end">Agreement</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let store of pagedList.pagedData">
+          <th scope="row">{{ store.storeId }}</th>
+          <td>
+            {{ store.storeName }}
+          </td>
+          <td>{{ store.category?.categoryName }}</td>
+          <td >
+            <a class="btn btn-primary" routerLink="/stores/{{ store.storeId }}"
+              >View</a
+            >
+          </td>
+          <td class="text-end">
+            <a *ngIf="store.leaseAgreementId!==null; else elseBlock" class="btn btn-primary" routerLink="/lease-agreement/{{ store.storeId }}"
+              >View Agreement</a
+            >
+            <ng-template #elseBlock><a class="btn btn-primary" routerLink="/lease-agreement/{{ store.storeId }}"
+              >Add agreement</a
+            ></ng-template>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="d-flex justify-content-between p-2">
+      <ngb-pagination
+        [collectionSize]="pagedList.totalItemsCount"
+        [(page)]="currentPage"
+        [pageSize]="pageSize"
+        (pageChange)="refreshStoreList()"
+      >
+      </ngb-pagination>
+
+      <select
+        class="form-select"
+        style="width: auto"
+        [(ngModel)]="pageSize"
+        (ngModelChange)="refreshStoreList()"
+      >
+        <option [ngValue]="10">10</option>
+        <option [ngValue]="50">50</option>
+        <option [ngValue]="100">100</option>
+      </select>
+    </div>
+  </div>
+</div>
