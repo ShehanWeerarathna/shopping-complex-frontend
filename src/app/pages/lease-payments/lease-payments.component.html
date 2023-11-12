@@ -2,7 +2,7 @@
   <h1>Lease Payments</h1>
 </div>
 
-<div class="row justify-content-center">
+<div *ngIf="pagedList.pagedData && pagedList.pagedData.length>0" class="row justify-content-center">
   <div class="col-md-9">
     <table class="table table-striped">
       <thead>

@@ -6,6 +6,7 @@ import { LeaseAgreementComponent } from './pages/lease-agreement/lease-agreement
 import { LeaseAgreementsComponent } from './pages/lease-agreements/lease-agreements.component';
 import { LeasePaymentsComponent } from './pages/lease-payments/lease-payments.component';
 import { LeasePaymentComponent } from './pages/lease-payment/lease-payment.component';
+import { FinancialReportComponent } from './pages/financial-report/financial-report.component';
 
 const routes: Routes = [
   { path: 'stores', component: StoreListComponent },
@@ -17,6 +18,7 @@ const routes: Routes = [
   },
   { path: 'lease-payment/:leaseAgreementId/:id', component: LeasePaymentComponent },
   { path: 'lease-agreements', component: LeaseAgreementsComponent },
+  { path: 'financial-report', component: FinancialReportComponent },
   { path: '', redirectTo: '/stores', pathMatch: 'full' },
 ];
 

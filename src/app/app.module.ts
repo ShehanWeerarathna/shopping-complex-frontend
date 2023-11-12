@@ -15,6 +15,7 @@ import { LeaseAgreementComponent } from './pages/lease-agreement/lease-agreement
 import { LeaseAgreementsComponent } from './pages/lease-agreements/lease-agreements.component';
 import { LeasePaymentsComponent } from './pages/lease-payments/lease-payments.component';
 import { LeasePaymentComponent } from './pages/lease-payment/lease-payment.component';
+import { FinancialReportComponent } from './pages/financial-report/financial-report.component';
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import { LeasePaymentComponent } from './pages/lease-payment/lease-payment.compo
     LeaseAgreementsComponent,
     LeasePaymentsComponent,
     LeasePaymentComponent,
+    FinancialReportComponent,
   ],
   imports: [
     NgbModule,
