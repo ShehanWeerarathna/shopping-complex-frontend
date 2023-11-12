@@ -30,7 +30,7 @@ export class LeaseAgreementComponent implements OnInit {
       {} as NgbDateStruct,
       Validators.required
     ),
-    leaseAmount: new FormControl<number>(0, Validators.required),
+    leaseAmount: new FormControl<number>(0, [Validators.required, Validators.min(1)]),
   });
 
   constructor(
@@ -59,15 +59,21 @@ export class LeaseAgreementComponent implements OnInit {
           if (data.leaseAgreementId === 0) {
             this.isEditable = true;
             this.leaseAgreementForm.enable();
+            this.leaseAgreementForm.setValue({
+              leaseStartDate: startDate,
+              leaseEndDate: {} as NgbDateStruct,
+              leaseAmount: data.leaseAmount,
+            });
           } else {
             this.isEditable = false;
             this.leaseAgreementForm.disable();
+            this.leaseAgreementForm.setValue({
+              leaseStartDate: startDate,
+              leaseEndDate: endDate,
+              leaseAmount: data.leaseAmount,
+            });
           }
-          this.leaseAgreementForm.setValue({
-            leaseStartDate: startDate,
-            leaseEndDate: endDate,
-            leaseAmount: data.leaseAmount,
-          });
+          
         });
     });
   }

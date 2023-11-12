@@ -69,7 +69,7 @@
         <thead>
           <tr>
             <th scope="col">#</th>
-            <th scope="col">Agreement</th>
+            <th scope="col">store</th>
             <th scope="col" scope="col">Amount</th>
             <th scope="col" scope="col">Payment Date</th>
             <th>View</th>
@@ -78,7 +78,7 @@
         <tbody>
           <tr *ngFor="let leasePayment of pagedList.pagedData">
             <td scope="row">{{ leasePayment.leasePaymentId }}</td>
-            <td scope="row">{{ leasePayment.leaseAgreementId }}</td>
+            <td scope="row">{{ leasePayment.leaseAgreement?.store?.storeName }}</td>
             <td>{{ leasePayment.amount }}</td>
             <td>{{ leasePayment.paymentDate | date : "yyyy-MM-dd" }}</td>
             <td>

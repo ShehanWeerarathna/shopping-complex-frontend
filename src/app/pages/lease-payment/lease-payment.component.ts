@@ -26,7 +26,7 @@ export class LeasePaymentComponent implements OnInit {
       },
       Validators.required
     ),
-    amount: new FormControl(0, Validators.required),
+    amount: new FormControl(0,[Validators.required, Validators.min(1)]),
     
   });
 
