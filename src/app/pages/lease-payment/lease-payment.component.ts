@@ -27,10 +27,7 @@ export class LeasePaymentComponent implements OnInit {
       Validators.required
     ),
     amount: new FormControl(0, Validators.required),
-    leaseAgreementId: new FormControl<number | null>(
-      this.leaseAgreementId,
-      Validators.required
-    ),
+    
   });
 
   constructor(
@@ -54,15 +51,15 @@ export class LeasePaymentComponent implements OnInit {
             };
             this.paymentForm.setValue({
               paymentDate: agreementDate,
-              amount: data.amount,
-              leaseAgreementId: this.leaseAgreementId,
+              amount: data.amount
             });
           });
         this.isEditable = false;
         this.paymentForm.disable();
-      }else{
-        this.leasePaymentService.getLeasePaymentByIdAsync(0).subscribe(
-          data => {
+      } else {
+        this.leasePaymentService
+          .getLeasePaymentByIdAsync(0)
+          .subscribe((data) => {
             this.leasePayment = data;
             const agreementDate: NgbDateStruct = {
               year: new Date(data.paymentDate).getFullYear(),
@@ -71,14 +68,66 @@ export class LeasePaymentComponent implements OnInit {
             };
             this.paymentForm.setValue({
               paymentDate: agreementDate,
-              amount: data.amount,
-              leaseAgreementId: this.leaseAgreementId,
+              amount: data.amount
             });
-          }
-        );
+          });
         this.isEditable = true;
         this.paymentForm.enable();
       }
     });
+  }
+  editForm(){
+    this.isEditable = true;
+    this.paymentForm.enable();
+  }
+  deleteProduct(){
+    this.leasePaymentService.deleteLeasePayment(this.leasePayment.leasePaymentId).subscribe((data) => {
+      console.log(data);
+    });
+  }
+  submitForm(){
+   this.paymentForm.markAllAsTouched();
+   if(this.paymentForm.invalid){
+     return;
+   }
+   const leasePayment:LeasePayment = {
+      leasePaymentId: this.leasePayment.leasePaymentId,
+      leaseAgreementId: this.leaseAgreementId,
+      paymentDate: `${this.paymentForm.value.paymentDate?.year}-${this.paymentForm.value.paymentDate?.month}-${this.paymentForm.value.paymentDate?.day}`,
+      amount: this.paymentForm.value.amount ??0
+    }
+    this.saveLeasePayment(leasePayment);
+  }
+
+  saveLeasePayment(leasePayment:LeasePayment){
+    if(this.isNewPayment){
+      this.leasePaymentService.createLeasePayment(leasePayment).subscribe((data) => {
+        const agreementDate: NgbDateStruct = {
+          year: new Date(data.paymentDate).getFullYear(),
+          month: new Date(data.paymentDate).getMonth() + 1,
+          day: new Date(data.paymentDate).getDate(),
+        };
+        this.paymentForm.setValue({
+          paymentDate: agreementDate,
+          amount: data.amount
+        });
+        this.isEditable = false;
+        this.paymentForm.disable();
+      });
+    }else{
+      this.leasePaymentService.updateLeasePayment(leasePayment).subscribe((data) => {
+        const agreementDate: NgbDateStruct = {
+          year: new Date(data.paymentDate).getFullYear(),
+          month: new Date(data.paymentDate).getMonth() + 1,
+          day: new Date(data.paymentDate).getDate(),
+        };
+        this.paymentForm.setValue({
+          paymentDate: agreementDate,
+          amount: data.amount
+        });
+        this.isEditable = false;
+        this.paymentForm.disable();
+      });
+    }
   }
 }
