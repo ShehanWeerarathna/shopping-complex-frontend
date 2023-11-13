@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { LeasePayment } from 'src/app/common/common.types';
 import { LeasePaymentService } from 'src/app/services/lease-payment.service';
@@ -32,7 +32,8 @@ export class LeasePaymentComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private leasePaymentService: LeasePaymentService
+    private leasePaymentService: LeasePaymentService,
+    private router: Router
   ) {}
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
@@ -80,10 +81,15 @@ export class LeasePaymentComponent implements OnInit {
     this.isEditable = true;
     this.paymentForm.enable();
   }
-  deleteProduct(){
-    this.leasePaymentService.deleteLeasePayment(this.leasePayment.leasePaymentId).subscribe((data) => {
-      console.log(data);
-    });
+  async deleteProduct(){
+    if(this.leasePayment.leasePaymentId === 0){
+      return;
+    }
+    if(confirm(`Are you sure you want to delete this payment?`)){
+      this.leasePaymentService.deleteLeasePayment(this.leasePayment.leasePaymentId).subscribe((data) => {
+        this.router.navigate([`/lease-payments/${this.leaseAgreementId}`]);
+      });
+    }
   }
   submitForm(){
    this.paymentForm.markAllAsTouched();
@@ -100,7 +106,7 @@ export class LeasePaymentComponent implements OnInit {
   }
 
   saveLeasePayment(leasePayment:LeasePayment){
-    if(this.isNewPayment){
+    if(leasePayment.leasePaymentId ===0){
       this.leasePaymentService.createLeasePayment(leasePayment).subscribe((data) => {
         const agreementDate: NgbDateStruct = {
           year: new Date(data.paymentDate).getFullYear(),

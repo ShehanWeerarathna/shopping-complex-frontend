@@ -12,6 +12,8 @@ export interface Store {
   category?: Category
   leaseAgreementId?: number|null
   leaseAgreement?: LeaseAgreement
+  maintenanceContractId?: number|null
+  maintenanceContract?: MaintenanceContract
 }
 
 export interface Category {
@@ -30,12 +32,30 @@ export interface LeaseAgreement {
   payments?: LeasePayment[]
 }
 
+export interface MaintenanceContract {
+  maintenanceContractId: number
+  storeId: number
+  contractStartDate: string
+  contractEndDate: string
+  contractAmount: number
+  store?: Store
+  payments?: MaintenancePayment[]
+}
+
 export interface LeasePayment {
   leasePaymentId: number
   leaseAgreementId: number
   paymentDate: string
   amount: number
   leaseAgreement?: LeaseAgreement
+}
+
+export interface MaintenancePayment {
+  maintenancePaymentId: number
+  maintenanceContractId: number
+  paymentDate: string
+  amount: number
+  maintenanceContract?: MaintenanceContract
 }
 
 

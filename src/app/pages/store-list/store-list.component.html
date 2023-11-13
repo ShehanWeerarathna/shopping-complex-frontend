@@ -49,7 +49,8 @@
           <th scope="col">Store Name</th>
           <th scope="col" scope="col">Category</th>
           <th>View</th>
-          <th class="text-end">Agreement</th>
+          <th class="text-end">Lease Agreement</th>
+          <th class="text-end">Maintenance Contract</th>
         </tr>
       </thead>
       <tbody>
@@ -72,6 +73,13 @@
               >Add agreement</a
             ></ng-template>
           </td>
+          <td class="text-end">
+            <a *ngIf="store.maintenanceContractId!==null; else elseBlockContract" class="btn btn-primary" routerLink="/maintenance-contract/{{ store.storeId }}"
+              >View Contract</a
+            >
+            <ng-template #elseBlockContract><a class="btn btn-primary" routerLink="/maintenance-contract/{{ store.storeId }}"
+              >Add contract</a
+            ></ng-template>
         </tr>
       </tbody>
     </table>

@@ -16,6 +16,10 @@ import { LeaseAgreementsComponent } from './pages/lease-agreements/lease-agreeme
 import { LeasePaymentsComponent } from './pages/lease-payments/lease-payments.component';
 import { LeasePaymentComponent } from './pages/lease-payment/lease-payment.component';
 import { FinancialReportComponent } from './pages/financial-report/financial-report.component';
+import { MaintenanceContractComponent } from './pages/maintenance-contract/maintenance-contract.component';
+import { MaintenanceContractsComponent } from './pages/maintenance-contracts/maintenance-contracts.component';
+import { MaintenancePaymentComponent } from './pages/maintenance-payment/maintenance-payment.component';
+import { MaintenancePaymentsComponent } from './pages/maintenance-payments/maintenance-payments.component';
 
 
 @NgModule({
@@ -28,6 +32,10 @@ import { FinancialReportComponent } from './pages/financial-report/financial-rep
     LeasePaymentsComponent,
     LeasePaymentComponent,
     FinancialReportComponent,
+    MaintenanceContractComponent,
+    MaintenanceContractsComponent,
+    MaintenancePaymentComponent,
+    MaintenancePaymentsComponent,
   ],
   imports: [
     NgbModule,
