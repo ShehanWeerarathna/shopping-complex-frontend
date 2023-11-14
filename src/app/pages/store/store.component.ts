@@ -20,7 +20,7 @@ export class StoreComponent implements OnInit {
 
   storeForm = new FormGroup({
     storeName: new FormControl("", Validators.required),
-    categoryId: new FormControl<number|null>(null, Validators.required),
+    categoryId: new FormControl<number|null>(null, [Validators.required,  Validators.min(1,)]),
     leaseAgreementId: new FormControl<number|null>(null),
   });
 

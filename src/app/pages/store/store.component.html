@@ -37,7 +37,7 @@
       "
       class="alert alert-danger"
     >
-      <div *ngIf="storeForm.controls.categoryId?.errors?.['required']">
+      <div *ngIf="storeForm.controls.categoryId?.errors?.['min']">
         Category is required.
       </div>
     </div>

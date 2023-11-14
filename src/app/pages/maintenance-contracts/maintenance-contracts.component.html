@@ -1,9 +1,9 @@
-<div class="row">
-    <h1>Maintenance Contracts</h1>
-  </div>
-  
-  <div *ngIf="pagedList.pagedData && pagedList.pagedData.length > 0" class="row justify-content-center">
-    <div class="col-md-9">
+<!-- maintenance-contracts.component.html -->
+<div class="row justify-content-center">
+  <div class="col-md-12">
+    <h2>Maintenance Contracts</h2>
+
+    <div *ngIf="pagedList.pagedData && pagedList.pagedData.length > 0">
       <table class="table table-striped">
         <thead>
           <tr>
@@ -23,22 +23,37 @@
               {{ maintenanceContract.store?.storeName }}
             </td>
             <td>{{ maintenanceContract.contractAmount }}</td>
-            <td>{{ maintenanceContract.contractStartDate | date: "yyyy-MM-dd" }}</td>
-            <td>{{ maintenanceContract.contractEndDate | date: "yyyy-MM-dd" }}</td>
             <td>
-              <a class="btn btn-primary" routerLink="/maintenance-contract/{{ maintenanceContract.storeId }}"
-                >View</a
-              >
+              {{ maintenanceContract.contractStartDate | date : "yyyy-MM-dd" }}
             </td>
             <td>
-              <a class="btn btn-primary" routerLink="/maintenance-payments/{{ maintenanceContract.maintenanceContractId }}"
-                >View</a
+              {{ maintenanceContract.contractEndDate | date : "yyyy-MM-dd" }}
+            </td>
+            <td>
+              <a
+                class="btn btn-primary"
+                routerLink="/maintenance-contract/{{
+                  maintenanceContract.storeId
+                }}"
               >
+                View
+              </a>
+            </td>
+            <td>
+              <a
+                class="btn btn-primary"
+                routerLink="/maintenance-payments/{{
+                  maintenanceContract.maintenanceContractId
+                }}"
+              >
+                View
+              </a>
             </td>
           </tr>
         </tbody>
       </table>
-      <div class="d-flex justify-content-between p-2">
+
+      <div class="d-flex justify-content-between p-2 align-items-center">
         <ngb-pagination
           [collectionSize]="pagedList.totalItemsCount"
           [(page)]="currentPage"
@@ -46,7 +61,7 @@
           (pageChange)="refreshMaintenanceContractList()"
         >
         </ngb-pagination>
-  
+
         <select
           class="form-select"
           style="width: auto"
@@ -60,5 +75,4 @@
       </div>
     </div>
   </div>
-  
-  
+</div>

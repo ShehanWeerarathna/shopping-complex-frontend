@@ -1,22 +1,10 @@
 <div class="row">
-  <h1>Stores list</h1>
+  <h2>Stores list</h2>
 </div>
 
-<select
-  id="categoryId"
-  [(ngModel)]="categoryId"
-  (change)="refreshStoreList()"
-  class="form-select"
->
-  <option value="0">All</option>
-  <option *ngFor="let selectItem of categories" [value]="selectItem.categoryId">
-    {{ selectItem.categoryName }}
-  </option>
-</select>
-
-<div *ngIf="pagedList.pagedData && pagedList.pagedData.length>0" class="row justify-content-center">
+<div class="row justify-content-center">
   <div class="col-md-6">
-    <div class="input-group">
+    <div class="input-group mb-3">
       <input
         [(ngModel)]="searchTerm"
         type="text"
@@ -24,31 +12,33 @@
         placeholder="Search..."
         (keyup.enter)="refreshStoreList()"
       />
-      <div class="input-group-append">
-        <button class="btn btn-primary" (click)="refreshStoreList()">
-          Search
-        </button>
-      </div>
+      <button
+        class="btn btn-primary input-group-append"
+        type="button"
+        (click)="refreshStoreList()"
+      >
+        Search
+      </button>
     </div>
   </div>
 </div>
-<!-- Button row start -->
-<div class="row justify-content-end">
-  <div class="col-md-3">
+
+<div class="row mb-3 justify-content-end">
+  <div class="col-md-3 d-flex justify-content-end">
     <a class="btn btn-primary" routerLink="/stores/new">Add new store</a>
   </div>
 </div>
-<!-- Button ro end -->
 
 <div class="row justify-content-center">
-  <div class="col-md-9">
+  <div class="col-md-12">
     <table class="table table-striped">
       <thead>
         <tr>
           <th scope="col">#</th>
+
           <th scope="col">Store Name</th>
-          <th scope="col" scope="col">Category</th>
-          <th>View</th>
+          <th scope="col">Category</th>
+          <th scope="col">View</th>
           <th class="text-end">Lease Agreement</th>
           <th class="text-end">Maintenance Contract</th>
         </tr>
@@ -60,31 +50,53 @@
             {{ store.storeName }}
           </td>
           <td>{{ store.category?.categoryName }}</td>
-          <td >
-            <a class="btn btn-primary" routerLink="/stores/{{ store.storeId }}"
-              >View</a
-            >
+          <td>
+            <a class="btn btn-primary" routerLink="/stores/{{ store.storeId }}">
+              View
+            </a>
           </td>
           <td class="text-end">
-            <a *ngIf="store.leaseAgreementId!==null; else elseBlock" class="btn btn-primary" routerLink="/lease-agreement/{{ store.storeId }}"
-              >View Agreement</a
+            <a
+              *ngIf="store.leaseAgreementId !== null; else elseBlock"
+              class="btn btn-primary"
+              routerLink="/lease-agreement/{{ store.storeId }}"
             >
-            <ng-template #elseBlock><a class="btn btn-primary" routerLink="/lease-agreement/{{ store.storeId }}"
-              >Add agreement</a
-            ></ng-template>
+              View Agreement
+            </a>
+            <ng-template #elseBlock>
+              <a
+                class="btn btn-primary"
+                routerLink="/lease-agreement/{{ store.storeId }}"
+              >
+                Add agreement
+              </a>
+            </ng-template>
           </td>
           <td class="text-end">
-            <a *ngIf="store.maintenanceContractId!==null; else elseBlockContract" class="btn btn-primary" routerLink="/maintenance-contract/{{ store.storeId }}"
-              >View Contract</a
+            <a
+              *ngIf="
+                store.maintenanceContractId !== null;
+                else elseBlockContract
+              "
+              class="btn btn-primary"
+              routerLink="/maintenance-contract/{{ store.storeId }}"
             >
-            <ng-template #elseBlockContract><a class="btn btn-primary" routerLink="/maintenance-contract/{{ store.storeId }}"
-              >Add contract</a
-            ></ng-template>
+              View Contract
+            </a>
+            <ng-template #elseBlockContract>
+              <a
+                class="btn btn-primary"
+                routerLink="/maintenance-contract/{{ store.storeId }}"
+              >
+                Add contract
+              </a>
+            </ng-template>
+          </td>
         </tr>
       </tbody>
     </table>
 
-    <div class="d-flex justify-content-between p-2">
+    <div class="d-flex justify-content-between p-2 align-items-center">
       <ngb-pagination
         [collectionSize]="pagedList.totalItemsCount"
         [(page)]="currentPage"
