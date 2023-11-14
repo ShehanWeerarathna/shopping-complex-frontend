@@ -81,3 +81,17 @@ export interface Customer {
   verified?: boolean;
   balance?: number;
 }
+
+export interface FinancialReport {
+  transactions: Transaction[]
+  totalCredit: number
+  totalDebit: number
+  balance: number
+}
+
+export interface Transaction {
+  paymentDate: string
+  description: string
+  amount: number
+  isCredit: boolean
+}
