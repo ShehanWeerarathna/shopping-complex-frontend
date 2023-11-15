@@ -53,6 +53,7 @@ export class FinancialReportComponent implements OnInit {
     }
   }
 
+  
   isHovered(date: NgbDate) {
     return (
       this.fromDate &&
@@ -83,6 +84,7 @@ export class FinancialReportComponent implements OnInit {
       : currentValue;
   }
 
+  // Get the financial report
   getReport() {
     if (this.fromDate && this.toDate) {
       this.financialReportService

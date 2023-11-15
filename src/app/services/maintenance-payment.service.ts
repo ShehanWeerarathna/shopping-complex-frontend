@@ -11,6 +11,7 @@ export class MaintenancePaymentService {
   private apiUrl = 'https://localhost:7038/api';
   constructor(private http: HttpClient) {}
 
+  // Get maintenance payments
   getMaintenancePaymentsAsync(
     currentPage?: number,
     pageSize?: number,
@@ -23,6 +24,7 @@ export class MaintenancePaymentService {
     );
   }
 
+  // Create maintenance payment
   createMaintenancePayment(maintenancePayment: MaintenancePayment): Observable<MaintenancePayment> {
     return this.http.post<MaintenancePayment>(
       `${this.apiUrl}/MaintenancePayment/CreateMaintenancePayment`,
@@ -30,6 +32,7 @@ export class MaintenancePaymentService {
     );
   }
 
+  // Update maintenance payment
   updateMaintenancePayment(maintenancePayment: MaintenancePayment): Observable<MaintenancePayment> {
     return this.http.put<MaintenancePayment>(
       `${this.apiUrl}/MaintenancePayment/UpdateMaintenancePayment/${maintenancePayment.maintenancePaymentId}`,
@@ -37,12 +40,14 @@ export class MaintenancePaymentService {
     );
   }
 
+  // Delete maintenance payment
   deleteMaintenancePayment(maintenancePaymentId: number): Observable<MaintenancePayment> {
     return this.http.delete<MaintenancePayment>(
       `${this.apiUrl}/MaintenancePayment/DeleteMaintenancePayment/${maintenancePaymentId}`
     );
   }
 
+  // Get maintenance payment by id
   getMaintenancePaymentByIdAsync(maintenancePaymentId: number): Observable<MaintenancePayment> {
     return this.http.get<MaintenancePayment>(
       `${this.apiUrl}/MaintenancePayment/GetMaintenancePaymentById/${maintenancePaymentId}`

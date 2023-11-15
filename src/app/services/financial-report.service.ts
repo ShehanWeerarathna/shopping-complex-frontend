@@ -10,7 +10,7 @@ export class FinancialReportService {
   private apiUrl = 'https://localhost:7038/api';
   constructor(private http: HttpClient) {}
 
-  
+  // Get financial report
   getFinancialReport(startDate: string,endDate: string): Observable<FinancialReport> {
     let url = `${this.apiUrl}/FinancialReport/GetFinancialReport?startDate=${startDate}&endDate=${endDate}`;
     return this.http.get<FinancialReport>(url);

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Category, PagedData, Store } from '../../common/common.types';
 import { StoreService } from '../../services/store.service';
-import { storeNameSignal } from './store-list.signals';
+import { storeNameSignal } from 'src/app/common/common.signals';
 
 @Component({
   selector: 'app-store-list',
@@ -28,6 +28,7 @@ export class StoreListComponent implements OnInit {
     });
   }
 
+  // Refresh the store list when the user clicks the Search button.
   refreshStoreList() {
     this.storeService
       .getStoreListAsync(

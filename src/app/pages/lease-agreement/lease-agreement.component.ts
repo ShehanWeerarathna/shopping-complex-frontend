@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { storeNameSignal } from 'src/app/common/common.signals';
 import { LeaseAgreement } from 'src/app/common/common.types';
 import { LeaseAgreementService } from 'src/app/services/lease-agreement.service';
-import { storeNameSignal } from '../store-list/store-list.signals';
 
 const today: Date = new Date();
 
@@ -19,6 +19,7 @@ export class LeaseAgreementComponent implements OnInit {
   isEditable: boolean = false;
   storeName: string = '';
 
+  // Initialize the leaseAgreementForm form group
   leaseAgreementForm = new FormGroup({
     leaseStartDate: new FormControl<NgbDateStruct>(
       {
@@ -83,6 +84,8 @@ export class LeaseAgreementComponent implements OnInit {
         });
     });
   }
+
+  // Submit the form
   submitForm() {
     this.leaseAgreementForm.markAllAsTouched();
     if (this.leaseAgreementForm.invalid) {
@@ -99,11 +102,14 @@ export class LeaseAgreementComponent implements OnInit {
 
     this.saveLeaseAgreement(leaseAgreement);
   }
+
+  // Edit the form
   editForm() {
     this.isEditable = true;
     this.leaseAgreementForm.enable();
   }
 
+  // Delete the agreement
   deleteAgreement() {
     if (this.leaseAgreement.leaseAgreementId === 0) {
       return;
@@ -117,6 +123,7 @@ export class LeaseAgreementComponent implements OnInit {
     }
   }
 
+  // Save the agreement
   saveLeaseAgreement(leaseAgreement: LeaseAgreement) {
     if (
       this.leaseAgreement.leaseAgreementId &&

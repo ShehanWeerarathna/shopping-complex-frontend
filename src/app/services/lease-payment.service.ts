@@ -10,6 +10,7 @@ export class LeasePaymentService {
   private apiUrl = 'https://localhost:7038/api';
   constructor(private http: HttpClient) {}
 
+  // Get lease payments
   getLeasePaymentsAsync(
     currentPage?: number,
     pageSize?: number,
@@ -22,6 +23,7 @@ export class LeasePaymentService {
     );
   }
 
+  // Create lease payment
   createLeasePayment(leasePayment: LeasePayment): Observable<LeasePayment> {
     return this.http.post<LeasePayment>(
       `${this.apiUrl}/LeasePayment/CreateLeasePayment`,
@@ -29,6 +31,7 @@ export class LeasePaymentService {
     );
   }
 
+  // Update lease payment
   updateLeasePayment(leasePayment: LeasePayment): Observable<LeasePayment> {
     return this.http.put<LeasePayment>(
       `${this.apiUrl}/LeasePayment/UpdateLeasePayment/${leasePayment.leasePaymentId}`,
@@ -36,12 +39,14 @@ export class LeasePaymentService {
     );
   }
 
+  // Delete lease payment
   deleteLeasePayment(leasePaymentId: number): Observable<LeasePayment> {
     return this.http.delete<LeasePayment>(
       `${this.apiUrl}/LeasePayment/DeleteLeasePayment/${leasePaymentId}`
     );
   }
 
+  // Get lease payment by id
   getLeasePaymentByIdAsync(leasePaymentId: number): Observable<LeasePayment> {
     return this.http.get<LeasePayment>(
       `${this.apiUrl}/LeasePayment/GetLeasePaymentById/${leasePaymentId}`

@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { storeNameSignal } from 'src/app/common/common.signals';
 import { LeasePayment } from 'src/app/common/common.types';
 import { LeasePaymentService } from 'src/app/services/lease-payment.service';
-import { storeNameSignal } from '../store-list/store-list.signals';
 const today: Date = new Date();
 @Component({
   selector: 'app-lease-payment',
@@ -19,6 +19,7 @@ export class LeasePaymentComponent implements OnInit {
   leasePayment: LeasePayment = {} as LeasePayment;
   storeName: string = '';
 
+  // Initialize the paymentForm form group
   paymentForm = new FormGroup({
     paymentDate: new FormControl<NgbDateStruct>(
       {
@@ -80,11 +81,14 @@ export class LeasePaymentComponent implements OnInit {
       }
     });
   }
+
+  // Enable the form for editing
   editForm() {
     this.isEditable = true;
     this.paymentForm.enable();
   }
 
+  // Delete the payment
   deletePayment() {
     if (this.leasePayment.leasePaymentId === 0) {
       return;
@@ -98,6 +102,7 @@ export class LeasePaymentComponent implements OnInit {
     }
   }
 
+  // Save the payment
   submitForm() {
     this.paymentForm.markAllAsTouched();
     if (this.paymentForm.invalid) {
@@ -112,6 +117,7 @@ export class LeasePaymentComponent implements OnInit {
     this.saveLeasePayment(leasePayment);
   }
 
+  // Save the payment
   saveLeasePayment(leasePayment: LeasePayment) {
     if (leasePayment.leasePaymentId === 0) {
       this.leasePaymentService

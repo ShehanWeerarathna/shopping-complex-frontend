@@ -66,17 +66,20 @@ export class StoreComponent implements OnInit {
     });
   }
 
+  // Get the list of categories
   getCategories() {
     this.storeService.getCategoryListAsync().subscribe((data) => {
       this.categories = data;
     });
   }
 
+  // Enable editing of the form
   editForm() {
     this.storeForm.enable();
     this.isEditable = true;
   }
 
+  // Submit the form
   submitForm() {
     this.storeForm.markAllAsTouched();
     if (this.storeForm.invalid) {
@@ -91,6 +94,7 @@ export class StoreComponent implements OnInit {
     this.saveStore(store);
   }
 
+  // Save the store
   saveStore(store: Store) {
     if (this.store.storeId > 0) {
       this.storeService.updateStore(store).subscribe((data) => {
@@ -117,6 +121,7 @@ export class StoreComponent implements OnInit {
     }
   }
 
+  // Delete the store
   deletePayment() {
     if (this.store.storeId && this.store.storeId > 0) {
       if (confirm('Are you sure you want to delete this store?')) {

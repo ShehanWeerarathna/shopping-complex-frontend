@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { storeNameSignal } from 'src/app/common/common.signals';
 import { MaintenancePayment } from 'src/app/common/common.types';
 import { MaintenancePaymentService } from 'src/app/services/maintenance-payment.service';
-import { storeNameSignal } from '../store-list/store-list.signals';
 
 const today: Date = new Date();
 
@@ -84,11 +84,13 @@ export class MaintenancePaymentComponent {
     });
   }
 
+  // Enable editing of the form
   editForm() {
     this.isEditable = true;
     this.paymentForm.enable();
   }
 
+  // Delete the payment
   deletePayment() {
     if (this.maintenancePayment.maintenancePaymentId === 0) {
       return;
@@ -104,6 +106,7 @@ export class MaintenancePaymentComponent {
     }
   }
 
+  // Save the payment
   submitForm() {
     this.paymentForm.markAllAsTouched();
     if (this.paymentForm.invalid) {
@@ -118,6 +121,7 @@ export class MaintenancePaymentComponent {
     this.saveMaintenancePayment(maintenancePayment);
   }
 
+  // Save the payment
   saveMaintenancePayment(maintenancePayment: MaintenancePayment) {
     if (this.isNewPayment) {
       this.maintenancePaymentService

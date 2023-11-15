@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
+import { storeNameSignal } from 'src/app/common/common.signals';
 import { PagedData, MaintenanceContract } from 'src/app/common/common.types';
 import { MaintenanceContractService } from 'src/app/services/maintenance-contract.service';
-import { storeNameSignal } from '../store-list/store-list.signals';
 
 @Component({
   selector: 'app-maintenance-contracts',
@@ -20,6 +20,7 @@ export class MaintenanceContractsComponent {
     this.refreshMaintenanceContractList();
   }
 
+  // Refresh the maintenance contract list.
   refreshMaintenanceContractList() {
     this.maintenanceContractService
       .getMaintenanceContractsAsync(this.currentPage, this.pageSize)
@@ -29,6 +30,8 @@ export class MaintenanceContractsComponent {
         this.pageSize = data.pageSize;
       });
   }
+
+  // Set the store name in the common.signals.ts .
   setSelectedStoreName(storeName?: string) {
     if (storeName) {
       storeNameSignal.set(storeName);

@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { storeNameSignal } from 'src/app/common/common.signals';
 import { MaintenanceContract } from 'src/app/common/common.types';
 import { MaintenanceContractService } from 'src/app/services/maintenance-contract.service';
-import { storeNameSignal } from '../store-list/store-list.signals';
 
 const today: Date = new Date();
 
@@ -20,6 +20,8 @@ export class MaintenanceContractComponent {
   storeName: string = '';
 
   maintenanceContractForm = new FormGroup({
+
+    // Initialize the contractStartDate form control
     contractStartDate: new FormControl<NgbDateStruct>(
       {
         year: today.getFullYear(),
@@ -84,6 +86,7 @@ export class MaintenanceContractComponent {
     });
   }
 
+  // Submit the form
   submitForm() {
     this.maintenanceContractForm.markAllAsTouched();
     if (this.maintenanceContractForm.invalid) {
@@ -100,11 +103,13 @@ export class MaintenanceContractComponent {
     this.saveMaintenanceContract(maintenanceContract);
   }
 
+  // Edit the form
   editForm() {
     this.isEditable = true;
     this.maintenanceContractForm.enable();
   }
 
+  // Delete the contract
   deleteContract() {
     if (this.maintenanceContract.maintenanceContractId === 0) {
       return;
@@ -120,6 +125,7 @@ export class MaintenanceContractComponent {
     }
   }
 
+  // Save the contract
   saveMaintenanceContract(maintenanceContract: MaintenanceContract) {
     if (
       this.maintenanceContract.maintenanceContractId &&

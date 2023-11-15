@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { storeNameSignal } from 'src/app/common/common.signals';
 import { PagedData, MaintenancePayment } from 'src/app/common/common.types';
 import { MaintenancePaymentService } from 'src/app/services/maintenance-payment.service';
-import { storeNameSignal } from '../store-list/store-list.signals';
 
 @Component({
   selector: 'app-maintenance-payments',
@@ -31,6 +31,7 @@ export class MaintenancePaymentsComponent {
     });
   }
 
+  // Get the maintenance payments.
   refreshMaintenancePayments(maintenanceContractId: number) {
     this.maintenancePaymentService
       .getMaintenancePaymentsAsync(

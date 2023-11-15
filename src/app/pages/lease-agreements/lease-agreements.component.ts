@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { storeNameSignal } from 'src/app/common/common.signals';
 import { LeaseAgreement, PagedData } from 'src/app/common/common.types';
 import { LeaseAgreementService } from 'src/app/services/lease-agreement.service';
-import { storeNameSignal } from '../store-list/store-list.signals';
 
 @Component({
   selector: 'app-lease-agreements',
@@ -19,6 +19,7 @@ export class LeaseAgreementsComponent implements OnInit {
     this.refreshLeaseAgreementList();
   }
 
+  // Refresh the lease agreement list.
   refreshLeaseAgreementList() {
     this.leaseAgreementService
       .getLeaseAgreementsAsync(this.currentPage, this.pageSize)
@@ -28,6 +29,8 @@ export class LeaseAgreementsComponent implements OnInit {
         this.pageSize = data.pageSize;
       });
   }
+
+  // Set the store name in the common.signals.ts file .
   setSelectedStoreName(storeName?: string) {
     if (storeName) {
       storeNameSignal.set(storeName);

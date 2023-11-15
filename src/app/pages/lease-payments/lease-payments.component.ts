@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { storeNameSignal } from 'src/app/common/common.signals';
 import { LeasePayment, PagedData } from 'src/app/common/common.types';
 import { LeasePaymentService } from 'src/app/services/lease-payment.service';
-import { storeNameSignal } from '../store-list/store-list.signals';
 
 @Component({
   selector: 'app-lease-payments',
@@ -30,6 +30,7 @@ export class LeasePaymentsComponent implements OnInit {
     });
   }
 
+  // Get the lease payments for the selected lease agreement
   refreshLeasePayments(leaseAgreementId: number) {
     this.leasePaymentService
       .getLeasePaymentsAsync(this.currentPage, this.pageSize, leaseAgreementId)
