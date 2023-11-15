@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateParserFormatter, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { storeNameSignal } from 'src/app/common/common.signals';
 import { LeaseAgreement } from 'src/app/common/common.types';
 import { LeaseAgreementService } from 'src/app/services/lease-agreement.service';
@@ -22,11 +22,7 @@ export class LeaseAgreementComponent implements OnInit {
   // Initialize the leaseAgreementForm form group
   leaseAgreementForm = new FormGroup({
     leaseStartDate: new FormControl<NgbDateStruct>(
-      {
-        year: today.getFullYear(),
-        month: today.getMonth() + 1,
-        day: today.getDate(),
-      },
+      this.formatter.parse(today.toISOString()) as NgbDateStruct,
       Validators.required
     ),
     leaseEndDate: new FormControl<NgbDateStruct>(
@@ -42,7 +38,8 @@ export class LeaseAgreementComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private leaseAgreementService: LeaseAgreementService,
-    private router: Router
+    private router: Router,
+    public formatter: NgbDateParserFormatter,
   ) {
     this.storeName = storeNameSignal();
   }
@@ -54,16 +51,8 @@ export class LeaseAgreementComponent implements OnInit {
         .getLeaseAgreementByStoreIdAsync(Number(this.storeIdParam))
         .subscribe((data) => {
           this.leaseAgreement = data;
-          const startDate: NgbDateStruct = {
-            year: new Date(data.leaseStartDate).getFullYear(),
-            month: new Date(data.leaseStartDate).getMonth() + 1,
-            day: new Date(data.leaseStartDate).getDate(),
-          };
-          const endDate: NgbDateStruct = {
-            year: new Date(data.leaseEndDate).getFullYear(),
-            month: new Date(data.leaseEndDate).getMonth() + 1,
-            day: new Date(data.leaseEndDate).getDate(),
-          };
+          const startDate = this.formatter.parse(data.leaseStartDate);
+          const endDate = this.formatter.parse(data.leaseEndDate);
           if (data.leaseAgreementId === 0) {
             this.isEditable = true;
             this.leaseAgreementForm.enable();
@@ -94,8 +83,8 @@ export class LeaseAgreementComponent implements OnInit {
     const leaseAgreement: LeaseAgreement = {
       leaseAgreementId: this.leaseAgreement.leaseAgreementId,
       storeId: Number(this.storeIdParam),
-      leaseStartDate: `${this.leaseAgreementForm.value.leaseStartDate?.year}-${this.leaseAgreementForm.value.leaseStartDate?.month}-${this.leaseAgreementForm.value.leaseStartDate?.day}T00:00:00`,
-      leaseEndDate: `${this.leaseAgreementForm.value.leaseEndDate?.year}-${this.leaseAgreementForm.value.leaseEndDate?.month}-${this.leaseAgreementForm.value.leaseEndDate?.day}T00:00:00`,
+      leaseStartDate: this.formatter.format(this.leaseAgreementForm.value.leaseStartDate as NgbDateStruct),
+      leaseEndDate: this.formatter.format(this.leaseAgreementForm.value.leaseEndDate as NgbDateStruct),
 
       leaseAmount: this.leaseAgreementForm.value.leaseAmount ?? 0,
     };
@@ -133,16 +122,8 @@ export class LeaseAgreementComponent implements OnInit {
         .updateLeaseAgreement(leaseAgreement)
         .subscribe((data) => {
           this.leaseAgreement = data;
-          const startDate: NgbDateStruct = {
-            year: new Date(data.leaseStartDate).getFullYear(),
-            month: new Date(data.leaseStartDate).getMonth() + 1,
-            day: new Date(data.leaseStartDate).getDate(),
-          };
-          const endDate: NgbDateStruct = {
-            year: new Date(data.leaseEndDate).getFullYear(),
-            month: new Date(data.leaseEndDate).getMonth() + 1,
-            day: new Date(data.leaseEndDate).getDate(),
-          };
+          const startDate = this.formatter.parse(data.leaseStartDate);
+          const endDate = this.formatter.parse(data.leaseEndDate);
           this.leaseAgreementForm.setValue({
             leaseStartDate: startDate,
             leaseEndDate: endDate,
@@ -156,16 +137,8 @@ export class LeaseAgreementComponent implements OnInit {
         .createLeaseAgreement(leaseAgreement)
         .subscribe((data) => {
           this.leaseAgreement = data;
-          const startDate: NgbDateStruct = {
-            year: new Date(data.leaseStartDate).getFullYear(),
-            month: new Date(data.leaseStartDate).getMonth() + 1,
-            day: new Date(data.leaseStartDate).getDate(),
-          };
-          const endDate: NgbDateStruct = {
-            year: new Date(data.leaseEndDate).getFullYear(),
-            month: new Date(data.leaseEndDate).getMonth() + 1,
-            day: new Date(data.leaseEndDate).getDate(),
-          };
+          const startDate = this.formatter.parse(data.leaseStartDate);
+          const endDate = this.formatter.parse(data.leaseEndDate);
           this.leaseAgreementForm.setValue({
             leaseStartDate: startDate,
             leaseEndDate: endDate,

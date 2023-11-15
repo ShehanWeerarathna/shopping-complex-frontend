@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateParserFormatter, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { storeNameSignal } from 'src/app/common/common.signals';
 import { LeasePayment } from 'src/app/common/common.types';
 import { LeasePaymentService } from 'src/app/services/lease-payment.service';
@@ -22,11 +22,7 @@ export class LeasePaymentComponent implements OnInit {
   // Initialize the paymentForm form group
   paymentForm = new FormGroup({
     paymentDate: new FormControl<NgbDateStruct>(
-      {
-        year: today.getFullYear(),
-        month: today.getMonth() + 1,
-        day: today.getDate(),
-      },
+      this.formatter.parse(today.toISOString()) as NgbDateStruct,
       Validators.required
     ),
     amount: new FormControl(0, [Validators.required, Validators.min(1)]),
@@ -35,7 +31,8 @@ export class LeasePaymentComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private leasePaymentService: LeasePaymentService,
-    private router: Router
+    private router: Router,
+    public formatter: NgbDateParserFormatter,
   ) {
     this.storeName = storeNameSignal();
   }
@@ -49,13 +46,9 @@ export class LeasePaymentComponent implements OnInit {
           .getLeasePaymentByIdAsync(Number(this.paymentIdParam))
           .subscribe((data) => {
             this.leasePayment = data;
-            const agreementDate: NgbDateStruct = {
-              year: new Date(data.paymentDate).getFullYear(),
-              month: new Date(data.paymentDate).getMonth() + 1,
-              day: new Date(data.paymentDate).getDate(),
-            };
+            const paymentDate = this.formatter.parse(data.paymentDate);
             this.paymentForm.setValue({
-              paymentDate: agreementDate,
+              paymentDate: paymentDate,
               amount: data.amount,
             });
           });
@@ -66,13 +59,9 @@ export class LeasePaymentComponent implements OnInit {
           .getLeasePaymentByIdAsync(0)
           .subscribe((data) => {
             this.leasePayment = data;
-            const agreementDate: NgbDateStruct = {
-              year: new Date(data.paymentDate).getFullYear(),
-              month: new Date(data.paymentDate).getMonth() + 1,
-              day: new Date(data.paymentDate).getDate(),
-            };
+            const paymentDate = this.formatter.parse(data.paymentDate);
             this.paymentForm.setValue({
-              paymentDate: agreementDate,
+              paymentDate: paymentDate,
               amount: data.amount,
             });
           });
@@ -111,7 +100,7 @@ export class LeasePaymentComponent implements OnInit {
     const leasePayment: LeasePayment = {
       leasePaymentId: this.leasePayment.leasePaymentId,
       leaseAgreementId: this.leaseAgreementId,
-      paymentDate: `${this.paymentForm.value.paymentDate?.year}-${this.paymentForm.value.paymentDate?.month}-${this.paymentForm.value.paymentDate?.day}`,
+      paymentDate: this.formatter.format(this.paymentForm.value.paymentDate as NgbDateStruct),
       amount: this.paymentForm.value.amount ?? 0,
     };
     this.saveLeasePayment(leasePayment);

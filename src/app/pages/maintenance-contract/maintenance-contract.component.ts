@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateParserFormatter, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { storeNameSignal } from 'src/app/common/common.signals';
 import { MaintenanceContract } from 'src/app/common/common.types';
 import { MaintenanceContractService } from 'src/app/services/maintenance-contract.service';
@@ -23,11 +23,7 @@ export class MaintenanceContractComponent {
 
     // Initialize the contractStartDate form control
     contractStartDate: new FormControl<NgbDateStruct>(
-      {
-        year: today.getFullYear(),
-        month: today.getMonth() + 1,
-        day: today.getDate(),
-      },
+      this.formatter.parse(today.toISOString()) as NgbDateStruct,
       Validators.required
     ),
     contractEndDate: new FormControl<NgbDateStruct>(
@@ -43,7 +39,8 @@ export class MaintenanceContractComponent {
   constructor(
     private route: ActivatedRoute,
     private maintenanceContractService: MaintenanceContractService,
-    private router: Router
+    private router: Router,
+    public formatter: NgbDateParserFormatter,
   ) {
     this.storeName = storeNameSignal();
   }
@@ -55,16 +52,8 @@ export class MaintenanceContractComponent {
         .getMaintenanceContractByStoreIdAsync(Number(this.storeIdParam))
         .subscribe((data) => {
           this.maintenanceContract = data;
-          const startDate: NgbDateStruct = {
-            year: new Date(data.contractStartDate).getFullYear(),
-            month: new Date(data.contractStartDate).getMonth() + 1,
-            day: new Date(data.contractStartDate).getDate(),
-          };
-          const endDate: NgbDateStruct = {
-            year: new Date(data.contractEndDate).getFullYear(),
-            month: new Date(data.contractEndDate).getMonth() + 1,
-            day: new Date(data.contractEndDate).getDate(),
-          };
+          const startDate = this.formatter.parse(data.contractStartDate);
+          const endDate = this.formatter.parse(data.contractEndDate);
           if (data.maintenanceContractId === 0) {
             this.isEditable = true;
             this.maintenanceContractForm.enable();
@@ -95,8 +84,8 @@ export class MaintenanceContractComponent {
     const maintenanceContract: MaintenanceContract = {
       maintenanceContractId: this.maintenanceContract.maintenanceContractId,
       storeId: Number(this.storeIdParam),
-      contractStartDate: `${this.maintenanceContractForm.value.contractStartDate?.year}-${this.maintenanceContractForm.value.contractStartDate?.month}-${this.maintenanceContractForm.value.contractStartDate?.day}T00:00:00`,
-      contractEndDate: `${this.maintenanceContractForm.value.contractEndDate?.year}-${this.maintenanceContractForm.value.contractEndDate?.month}-${this.maintenanceContractForm.value.contractEndDate?.day}T00:00:00`,
+      contractStartDate: this.formatter.format(this.maintenanceContractForm.value.contractStartDate as NgbDateStruct),
+      contractEndDate: this.formatter.format(this.maintenanceContractForm.value.contractEndDate as NgbDateStruct),
       contractAmount: this.maintenanceContractForm.value.contractAmount ?? 0,
     };
 
@@ -135,16 +124,8 @@ export class MaintenanceContractComponent {
         .updateMaintenanceContract(maintenanceContract)
         .subscribe((data) => {
           this.maintenanceContract = data;
-          const startDate: NgbDateStruct = {
-            year: new Date(data.contractStartDate).getFullYear(),
-            month: new Date(data.contractStartDate).getMonth() + 1,
-            day: new Date(data.contractStartDate).getDate(),
-          };
-          const endDate: NgbDateStruct = {
-            year: new Date(data.contractEndDate).getFullYear(),
-            month: new Date(data.contractEndDate).getMonth() + 1,
-            day: new Date(data.contractEndDate).getDate(),
-          };
+          const startDate = this.formatter.parse(data.contractStartDate);
+          const endDate = this.formatter.parse(data.contractEndDate);
           this.maintenanceContractForm.setValue({
             contractStartDate: startDate,
             contractEndDate: endDate,
@@ -158,16 +139,8 @@ export class MaintenanceContractComponent {
         .createMaintenanceContract(maintenanceContract)
         .subscribe((data) => {
           this.maintenanceContract = data;
-          const startDate: NgbDateStruct = {
-            year: new Date(data.contractStartDate).getFullYear(),
-            month: new Date(data.contractStartDate).getMonth() + 1,
-            day: new Date(data.contractStartDate).getDate(),
-          };
-          const endDate: NgbDateStruct = {
-            year: new Date(data.contractEndDate).getFullYear(),
-            month: new Date(data.contractEndDate).getMonth() + 1,
-            day: new Date(data.contractEndDate).getDate(),
-          };
+          const startDate = this.formatter.parse(data.contractStartDate);
+          const endDate = this.formatter.parse(data.contractEndDate);
           this.maintenanceContractForm.setValue({
             contractStartDate: startDate,
             contractEndDate: endDate,

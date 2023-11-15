@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateParserFormatter, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { storeNameSignal } from 'src/app/common/common.signals';
 import { MaintenancePayment } from 'src/app/common/common.types';
 import { MaintenancePaymentService } from 'src/app/services/maintenance-payment.service';
@@ -22,12 +22,7 @@ export class MaintenancePaymentComponent {
   storeName: string = '';
 
   paymentForm = new FormGroup({
-    paymentDate: new FormControl<NgbDateStruct>(
-      {
-        year: today.getFullYear(),
-        month: today.getMonth() + 1,
-        day: today.getDate(),
-      },
+    paymentDate: new FormControl<NgbDateStruct>(this.formatter.parse(today.toISOString()) as NgbDateStruct,
       Validators.required
     ),
     amount: new FormControl(0, [Validators.required, Validators.min(1)]),
@@ -36,7 +31,8 @@ export class MaintenancePaymentComponent {
   constructor(
     private route: ActivatedRoute,
     private maintenancePaymentService: MaintenancePaymentService,
-    private router: Router
+    private router: Router,
+    public formatter: NgbDateParserFormatter,
   ) {
     this.storeName = storeNameSignal();
   }
@@ -51,13 +47,9 @@ export class MaintenancePaymentComponent {
           .getMaintenancePaymentByIdAsync(Number(this.paymentIdParam))
           .subscribe((data) => {
             this.maintenancePayment = data;
-            const agreementDate: NgbDateStruct = {
-              year: new Date(data.paymentDate).getFullYear(),
-              month: new Date(data.paymentDate).getMonth() + 1,
-              day: new Date(data.paymentDate).getDate(),
-            };
+            const paymentDate = this.formatter.parse(data.paymentDate);
             this.paymentForm.setValue({
-              paymentDate: agreementDate,
+              paymentDate: paymentDate,
               amount: data.amount,
             });
           });
@@ -68,13 +60,9 @@ export class MaintenancePaymentComponent {
           .getMaintenancePaymentByIdAsync(0)
           .subscribe((data) => {
             this.maintenancePayment = data;
-            const agreementDate: NgbDateStruct = {
-              year: new Date(data.paymentDate).getFullYear(),
-              month: new Date(data.paymentDate).getMonth() + 1,
-              day: new Date(data.paymentDate).getDate(),
-            };
+            const paymentDate = this.formatter.parse(data.paymentDate);
             this.paymentForm.setValue({
-              paymentDate: agreementDate,
+              paymentDate: paymentDate,
               amount: data.amount,
             });
           });
@@ -115,7 +103,7 @@ export class MaintenancePaymentComponent {
     const maintenancePayment: MaintenancePayment = {
       maintenancePaymentId: this.maintenancePayment.maintenancePaymentId,
       maintenanceContractId: this.maintenanceContractId,
-      paymentDate: `${this.paymentForm.value.paymentDate?.year}-${this.paymentForm.value.paymentDate?.month}-${this.paymentForm.value.paymentDate?.day}`,
+      paymentDate: this.formatter.format(this.paymentForm.value.paymentDate as NgbDateStruct),
       amount: this.paymentForm.value.amount ?? 0,
     };
     this.saveMaintenancePayment(maintenancePayment);
@@ -128,13 +116,9 @@ export class MaintenancePaymentComponent {
         .createMaintenancePayment(maintenancePayment)
         .subscribe((data) => {
           this.maintenancePayment = data;
-          const agreementDate: NgbDateStruct = {
-            year: new Date(data.paymentDate).getFullYear(),
-            month: new Date(data.paymentDate).getMonth() + 1,
-            day: new Date(data.paymentDate).getDate(),
-          };
+          const paymentDate = this.formatter.parse(data.paymentDate);
           this.paymentForm.setValue({
-            paymentDate: agreementDate,
+            paymentDate: paymentDate,
             amount: data.amount,
           });
           this.isEditable = false;
@@ -145,13 +129,9 @@ export class MaintenancePaymentComponent {
         .updateMaintenancePayment(maintenancePayment)
         .subscribe((data) => {
           this.maintenancePayment = data;
-          const agreementDate: NgbDateStruct = {
-            year: new Date(data.paymentDate).getFullYear(),
-            month: new Date(data.paymentDate).getMonth() + 1,
-            day: new Date(data.paymentDate).getDate(),
-          };
+          const paymentDate = this.formatter.parse(data.paymentDate);
           this.paymentForm.setValue({
-            paymentDate: agreementDate,
+            paymentDate: paymentDate,
             amount: data.amount,
           });
           this.isEditable = false;
