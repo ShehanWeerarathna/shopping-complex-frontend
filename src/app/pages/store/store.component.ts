@@ -7,72 +7,69 @@ import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-store',
   templateUrl: './store.component.html',
-  styleUrls: ['./store.component.css']
+  styleUrls: ['./store.component.css'],
 })
 export class StoreComponent implements OnInit {
-  storeIdParam: string | null = "";
+  storeIdParam: string | null = '';
   isNewStore: boolean = false;
   store: Store = {} as Store;
   isEditable: boolean = false;
   categories: Category[] = [];
 
-
-
   storeForm = new FormGroup({
-    storeName: new FormControl("", Validators.required),
-    categoryId: new FormControl<number|null>(null, [Validators.required,  Validators.min(1,)]),
-    leaseAgreementId: new FormControl<number|null>(null),
+    storeName: new FormControl('', Validators.required),
+    categoryId: new FormControl<number | null>(null, [
+      Validators.required,
+      Validators.min(1),
+    ]),
+    leaseAgreementId: new FormControl<number | null>(null),
   });
 
   constructor(
     private route: ActivatedRoute,
     private storeService: StoreService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.getCategories();
     this.route.paramMap.subscribe((params) => {
-      this.storeIdParam = params.get("id");
+      this.storeIdParam = params.get('id');
       this.isNewStore = this.storeIdParam === 'new';
       if (!this.isNewStore) {
-        this.storeService.getStoreByIdAsync(Number(this.storeIdParam)).subscribe(
-          data => {
+        this.storeService
+          .getStoreByIdAsync(Number(this.storeIdParam))
+          .subscribe((data) => {
             this.store = data;
             this.storeForm.setValue({
               storeName: data.storeName,
               categoryId: data.categoryId,
               leaseAgreementId: data.leaseAgreementId ?? null,
             });
-    
+
             this.storeForm.disable();
             this.isEditable = false;
-          }
-        );
-      }else{
-        this.storeService.getStoreByIdAsync(0).subscribe(
-          data => {
-            this.store = data;
-            this.storeForm.setValue({
-              storeName: data.storeName,
-              categoryId: data.categoryId,
-              leaseAgreementId: data.leaseAgreementId ?? null,
-            });
-    
-            this.storeForm.enable();
-            this.isEditable = true;
-          }
-        );
+          });
+      } else {
+        this.storeService.getStoreByIdAsync(0).subscribe((data) => {
+          this.store = data;
+          this.storeForm.setValue({
+            storeName: data.storeName,
+            categoryId: data.categoryId,
+            leaseAgreementId: data.leaseAgreementId ?? null,
+          });
+
+          this.storeForm.enable();
+          this.isEditable = true;
+        });
       }
     });
   }
 
-  getCategories(){
-    this.storeService.getCategoryListAsync().subscribe(
-      data => {
-        this.categories = data;
-      }
-    );
+  getCategories() {
+    this.storeService.getCategoryListAsync().subscribe((data) => {
+      this.categories = data;
+    });
   }
 
   editForm() {
@@ -82,21 +79,21 @@ export class StoreComponent implements OnInit {
 
   submitForm() {
     this.storeForm.markAllAsTouched();
-    if(this.storeForm.invalid){
+    if (this.storeForm.invalid) {
       return;
     }
     const store: Store = {
       storeId: this.store.storeId,
-      storeName: this.storeForm.value.storeName ?? "",
+      storeName: this.storeForm.value.storeName ?? '',
       categoryId: this.storeForm.value.categoryId ?? 0,
-      leaseAgreementId:  null,
+      leaseAgreementId: null,
     };
     this.saveStore(store);
   }
 
-  saveStore(store:Store) {
-    if(this.store.storeId > 0){
-      this.storeService.updateStore(store).subscribe((data)=>{
+  saveStore(store: Store) {
+    if (this.store.storeId > 0) {
+      this.storeService.updateStore(store).subscribe((data) => {
         this.store = data;
         this.storeForm.setValue({
           storeName: data.storeName,
@@ -105,10 +102,9 @@ export class StoreComponent implements OnInit {
         });
         this.storeForm.disable();
         this.isEditable = false;
-      }
-      );
-    }else{
-      this.storeService.createStore(store).subscribe((data)=>{
+      });
+    } else {
+      this.storeService.createStore(store).subscribe((data) => {
         this.store = data;
         this.storeForm.setValue({
           storeName: data.storeName,
@@ -117,20 +113,17 @@ export class StoreComponent implements OnInit {
         });
         this.storeForm.disable();
         this.isEditable = false;
-      }
-      );
+      });
     }
   }
 
-  async deleteProduct(){
-    if (this.store.storeId && this.store.storeId  > 0) {
-      const confirmed: boolean = await confirm("do you want to delete this product? ")
-      if (confirmed) {
+  deletePayment() {
+    if (this.store.storeId && this.store.storeId > 0) {
+      if (confirm('Are you sure you want to delete this store?')) {
         this.storeService.deleteStore(this.store.storeId).subscribe((data) => {
-          this.router.navigateByUrl("/stores")
+          this.router.navigateByUrl('/stores');
         });
       }
-
     }
   }
 }

@@ -1,3 +1,7 @@
+<div class="row">
+  <h2>Maintenance Contract Payment - {{ storeName }}</h2>
+</div>
+
 <form [formGroup]="paymentForm">
   <div class="row">
     <div class="col-sm-6 mb-3">
@@ -82,7 +86,7 @@
             Back
           </button>
           <button (click)="editForm()" class="btn btn-warning m-2">Edit</button>
-          <button (click)="deleteProduct()" class="btn btn-danger">
+          <button (click)="deletePayment()" class="btn btn-danger">
             Delete
           </button>
         </div>

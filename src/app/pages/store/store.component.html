@@ -1,3 +1,7 @@
+<div class="row">
+  <h2>Store - {{ store.storeName }}</h2>
+</div>
+
 <form [formGroup]="storeForm">
   <div class="form-group">
     <label for="store-name">Name: </label>
@@ -43,20 +47,6 @@
     </div>
   </div>
 
-  <!-- <div class="form-group">
-      <label for="price">Price: </label>
-      <input class="form-control" id="price" type="number" formControlName="price">
-      <div *ngIf="productForm.controls.price?.invalid && productForm.controls.price?.touched" class="alert alert-danger">
-        <div *ngIf="productForm.controls.price?.errors?.['required']">
-          Price is required.
-        </div>
-        <div *ngIf="productForm.controls.price?.errors?.['min']">
-          Price must be greater than 0.
-        </div>
-      </div>
-    </div>
-   -->
-
   <ng-template [ngIf]="isEditable" [ngIfElse]="notEditable">
     <div class="form-group">
       <button type="submit" (click)="submitForm()" class="btn btn-primary m-2">
@@ -69,14 +59,28 @@
       <div class="col-6">
         <div class="d-flex align-items-center justify-content-start">
           <button (click)="editForm()" class="btn btn-warning m-2">Edit</button>
-          <button (click)="deleteProduct()" class="btn btn-danger">Delete</button>
+          <button (click)="deletePayment()" class="btn btn-danger">
+            Delete
+          </button>
         </div>
       </div>
-  
+
       <div class="col-6">
         <div class="d-flex align-items-center justify-content-end">
-          <button *ngIf="store.maintenanceContractId" routerLink="/maintenance-contract/{{ store.storeId }}" class="btn btn-primary m-2">Maintenance Contract</button>
-          <button *ngIf="store.leaseAgreementId" routerLink="/lease-agreement/{{ store.storeId }}" class="btn btn-primary">Lease Agreement</button>
+          <button
+            *ngIf="store.maintenanceContractId"
+            routerLink="/maintenance-contract/{{ store.storeId }}"
+            class="btn btn-primary m-2"
+          >
+            Maintenance Contract
+          </button>
+          <button
+            *ngIf="store.leaseAgreementId"
+            routerLink="/lease-agreement/{{ store.storeId }}"
+            class="btn btn-primary"
+          >
+            Lease Agreement
+          </button>
         </div>
       </div>
     </div>

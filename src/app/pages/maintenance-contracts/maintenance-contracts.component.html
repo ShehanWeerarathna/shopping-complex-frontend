@@ -1,9 +1,14 @@
-<!-- maintenance-contracts.component.html -->
+<div class="row">
+  <h2>Maintenance Contracts</h2>
+</div>
 <div class="row justify-content-center">
   <div class="col-md-12">
-    <h2>Maintenance Contracts</h2>
-
-    <div *ngIf="pagedList.pagedData && pagedList.pagedData.length > 0; else elseBlock">
+    <div
+      *ngIf="
+        pagedList.pagedData && pagedList.pagedData.length > 0;
+        else elseBlock
+      "
+    >
       <table class="table table-striped">
         <thead>
           <tr>
@@ -32,6 +37,9 @@
             <td>
               <a
                 class="btn btn-primary"
+                (click)="
+                  setSelectedStoreName(maintenanceContract.store?.storeName)
+                "
                 routerLink="/maintenance-contract/{{
                   maintenanceContract.storeId
                 }}"
@@ -42,6 +50,9 @@
             <td>
               <a
                 class="btn btn-primary"
+                (click)="
+                  setSelectedStoreName(maintenanceContract.store?.storeName)
+                "
                 routerLink="/maintenance-payments/{{
                   maintenanceContract.maintenanceContractId
                 }}"

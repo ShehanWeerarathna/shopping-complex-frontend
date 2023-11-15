@@ -4,13 +4,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { MaintenancePayment } from 'src/app/common/common.types';
 import { MaintenancePaymentService } from 'src/app/services/maintenance-payment.service';
+import { storeNameSignal } from '../store-list/store-list.signals';
 
 const today: Date = new Date();
 
 @Component({
   selector: 'app-maintenance-payment',
   templateUrl: './maintenance-payment.component.html',
-  styleUrls: ['./maintenance-payment.component.css']
+  styleUrls: ['./maintenance-payment.component.css'],
 })
 export class MaintenancePaymentComponent {
   maintenanceContractId: number = 0;
@@ -18,6 +19,7 @@ export class MaintenancePaymentComponent {
   isNewPayment: boolean = false;
   isEditable: boolean = false;
   maintenancePayment: MaintenancePayment = {} as MaintenancePayment;
+  storeName: string = '';
 
   paymentForm = new FormGroup({
     paymentDate: new FormControl<NgbDateStruct>(
@@ -35,7 +37,9 @@ export class MaintenancePaymentComponent {
     private route: ActivatedRoute,
     private maintenancePaymentService: MaintenancePaymentService,
     private router: Router
-  ) {}
+  ) {
+    this.storeName = storeNameSignal();
+  }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
@@ -85,14 +89,18 @@ export class MaintenancePaymentComponent {
     this.paymentForm.enable();
   }
 
-  async deleteProduct() {
-    if (confirm('Are you sure you want to delete this payment?')) {
-      await this.maintenancePaymentService
+  deletePayment() {
+    if (this.maintenancePayment.maintenancePaymentId === 0) {
+      return;
+    }
+    if (confirm(`Are you sure you want to delete this payment?`)) {
+      this.maintenancePaymentService
         .deleteMaintenancePayment(this.maintenancePayment.maintenancePaymentId)
-        .toPromise();
-      this.router.navigate([
-        `/maintenance-payments/${this.maintenanceContractId}`,
-      ]);
+        .subscribe((data) => {
+          this.router.navigate([
+            `/maintenance-payments/${this.maintenanceContractId}`,
+          ]);
+        });
     }
   }
 

@@ -1,3 +1,6 @@
+<div class="row">
+  <h2 class="mt-4">Lease Agreement - {{ storeName }}</h2>
+</div>
 <form [formGroup]="leaseAgreementForm">
   <div class="row">
     <div class="col-sm-6 mb-3">
@@ -127,7 +130,7 @@
         Back
       </button>
       <button (click)="editForm()" class="btn btn-warning me-2">Edit</button>
-      <button (click)="deleteProduct()" class="btn btn-danger">Delete</button>
+      <button (click)="deleteAgreement()" class="btn btn-danger">Delete</button>
     </div>
   </ng-template>
 </form>

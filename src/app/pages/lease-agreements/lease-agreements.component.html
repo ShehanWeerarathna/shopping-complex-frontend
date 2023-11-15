@@ -1,8 +1,12 @@
+<div class="row"><h2>Lease Agreements</h2></div>
 <div class="row justify-content-center">
   <div class="col-md-12">
-    <h2>Lease Agreements</h2>
-
-    <div *ngIf="pagedList.pagedData && pagedList.pagedData.length > 0;else elseBlock">
+    <div
+      *ngIf="
+        pagedList.pagedData && pagedList.pagedData.length > 0;
+        else elseBlock
+      "
+    >
       <table class="table table-striped">
         <thead>
           <tr>
@@ -27,6 +31,7 @@
             <td>
               <a
                 class="btn btn-primary"
+                (click)="setSelectedStoreName(leaseAgreement.store?.storeName)"
                 routerLink="/lease-agreement/{{ leaseAgreement.storeId }}"
               >
                 View
@@ -35,6 +40,7 @@
             <td>
               <a
                 class="btn btn-primary"
+                (click)="setSelectedStoreName(leaseAgreement.store?.storeName)"
                 routerLink="/lease-payments/{{
                   leaseAgreement.leaseAgreementId
                 }}"

@@ -27,16 +27,19 @@
   <div class="col-md-6">
     <div class="input-group mb-3">
       <select
-  id="categoryId"
-  [(ngModel)]="categoryId"
-  (change)="refreshStoreList()"
-  class="form-select"
->
-  <option value="0">All</option>
-  <option *ngFor="let selectItem of categories" [value]="selectItem.categoryId">
-    {{ selectItem.categoryName }}
-  </option>
-</select>
+        id="categoryId"
+        [(ngModel)]="categoryId"
+        (change)="refreshStoreList()"
+        class="form-select"
+      >
+        <option value="0">All</option>
+        <option
+          *ngFor="let selectItem of categories"
+          [value]="selectItem.categoryId"
+        >
+          {{ selectItem.categoryName }}
+        </option>
+      </select>
     </div>
   </div>
 </div>
@@ -47,7 +50,10 @@
   </div>
 </div>
 
-<div class="row justify-content-center" *ngIf="pagedList.pagedData&&pagedList.pagedData.length>0 else elseBlock">
+<div
+  class="row justify-content-center"
+  *ngIf="pagedList.pagedData && pagedList.pagedData.length > 0; else elseBlock"
+>
   <div class="col-md-12">
     <table class="table table-striped">
       <thead>
@@ -69,7 +75,11 @@
           </td>
           <td>{{ store.category?.categoryName }}</td>
           <td>
-            <a class="btn btn-primary" routerLink="/stores/{{ store.storeId }}">
+            <a
+              class="btn btn-primary"
+              (click)="setSelectedStoreName(store.storeName)"
+              routerLink="/stores/{{ store.storeId }}"
+            >
               View
             </a>
           </td>
@@ -78,12 +88,14 @@
               *ngIf="store.leaseAgreementId !== null; else elseBlock"
               class="btn btn-primary"
               routerLink="/lease-agreement/{{ store.storeId }}"
+              (click)="setSelectedStoreName(store.storeName)"
             >
               View Agreement
             </a>
             <ng-template #elseBlock>
               <a
                 class="btn btn-primary"
+                (click)="setSelectedStoreName(store.storeName)"
                 routerLink="/lease-agreement/{{ store.storeId }}"
               >
                 Add agreement
@@ -97,6 +109,7 @@
                 else elseBlockContract
               "
               class="btn btn-primary"
+              (click)="setSelectedStoreName(store.storeName)"
               routerLink="/maintenance-contract/{{ store.storeId }}"
             >
               View Contract
@@ -105,6 +118,7 @@
               <a
                 class="btn btn-primary"
                 routerLink="/maintenance-contract/{{ store.storeId }}"
+                (click)="setSelectedStoreName(store.storeName)"
               >
                 Add contract
               </a>

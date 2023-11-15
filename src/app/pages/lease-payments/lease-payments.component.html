@@ -1,7 +1,6 @@
 <div class="row">
-  <h2>Lease Payments</h2>
+  <h2>Lease Agreement Payments - {{ storeName }}</h2>
 </div>
-
 <div class="row mb-3 justify-content-end">
   <div class="col-md-3 d-flex justify-content-end">
     <a
@@ -13,7 +12,7 @@
 </div>
 
 <div
-  *ngIf="pagedList.pagedData && pagedList.pagedData.length > 0 else elseBlock"
+  *ngIf="pagedList.pagedData && pagedList.pagedData.length > 0; else elseBlock"
   class="row justify-content-center"
 >
   <div class="col-md-12">
