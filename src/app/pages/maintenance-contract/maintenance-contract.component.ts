@@ -1,7 +1,11 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbDateParserFormatter, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbDateParserFormatter,
+  NgbDateStruct,
+} from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
 import { storeNameSignal } from 'src/app/common/common.signals';
 import { MaintenanceContract } from 'src/app/common/common.types';
 import { MaintenanceContractService } from 'src/app/services/maintenance-contract.service';
@@ -20,7 +24,6 @@ export class MaintenanceContractComponent {
   storeName: string = '';
 
   maintenanceContractForm = new FormGroup({
-
     // Initialize the contractStartDate form control
     contractStartDate: new FormControl<NgbDateStruct>(
       this.formatter.parse(today.toISOString()) as NgbDateStruct,
@@ -41,38 +44,53 @@ export class MaintenanceContractComponent {
     private maintenanceContractService: MaintenanceContractService,
     private router: Router,
     public formatter: NgbDateParserFormatter,
+    private toastr: ToastrService
   ) {
     this.storeName = storeNameSignal();
   }
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe((params) => {
-      this.storeIdParam = params.get('storeId');
-      this.maintenanceContractService
-        .getMaintenanceContractByStoreIdAsync(Number(this.storeIdParam))
-        .subscribe((data) => {
-          this.maintenanceContract = data;
-          const startDate = this.formatter.parse(data.contractStartDate);
-          const endDate = this.formatter.parse(data.contractEndDate);
-          if (data.maintenanceContractId === 0) {
-            this.isEditable = true;
-            this.maintenanceContractForm.enable();
-            this.maintenanceContractForm.setValue({
-              contractStartDate: startDate,
-              contractEndDate: {} as NgbDateStruct,
-              contractAmount: data.contractAmount,
+    this.route.paramMap
+      .subscribe({
+        next: (params) => {
+          this.storeIdParam = params.get('storeId');
+          this.maintenanceContractService
+            .getMaintenanceContractByStoreIdAsync(Number(this.storeIdParam))
+
+            .subscribe({
+              next: (data) => {
+                this.maintenanceContract = data;
+                const startDate = this.formatter.parse(
+                  data.contractStartDate
+                );
+                const endDate = this.formatter.parse(data.contractEndDate);
+                if (data.maintenanceContractId === 0) {
+                  this.isEditable = true;
+                  this.maintenanceContractForm.enable();
+                  this.maintenanceContractForm.setValue({
+                    contractStartDate: startDate,
+                    contractEndDate: {} as NgbDateStruct,
+                    contractAmount: data.contractAmount,
+                  });
+                } else {
+                  this.isEditable = false;
+                  this.maintenanceContractForm.disable();
+                  this.maintenanceContractForm.setValue({
+                    contractStartDate: startDate,
+                    contractEndDate: endDate,
+                    contractAmount: data.contractAmount,
+                  });
+                }
+              },
+              error: (error) => {
+                this.toastr.error(error.error);
+              },
             });
-          } else {
-            this.isEditable = false;
-            this.maintenanceContractForm.disable();
-            this.maintenanceContractForm.setValue({
-              contractStartDate: startDate,
-              contractEndDate: endDate,
-              contractAmount: data.contractAmount,
-            });
-          }
-        });
-    });
+        },
+        error: (error) => {
+          this.toastr.error(error.error);
+        },
+      });
   }
 
   // Submit the form
@@ -84,8 +102,12 @@ export class MaintenanceContractComponent {
     const maintenanceContract: MaintenanceContract = {
       maintenanceContractId: this.maintenanceContract.maintenanceContractId,
       storeId: Number(this.storeIdParam),
-      contractStartDate: this.formatter.format(this.maintenanceContractForm.value.contractStartDate as NgbDateStruct),
-      contractEndDate: this.formatter.format(this.maintenanceContractForm.value.contractEndDate as NgbDateStruct),
+      contractStartDate: this.formatter.format(
+        this.maintenanceContractForm.value.contractStartDate as NgbDateStruct
+      ),
+      contractEndDate: this.formatter.format(
+        this.maintenanceContractForm.value.contractEndDate as NgbDateStruct
+      ),
       contractAmount: this.maintenanceContractForm.value.contractAmount ?? 0,
     };
 
@@ -108,8 +130,13 @@ export class MaintenanceContractComponent {
         .deleteMaintenanceContract(
           this.maintenanceContract.maintenanceContractId
         )
-        .subscribe((data) => {
-          this.router.navigate([`/stores`]);
+        .subscribe({
+          next: (data) => {
+            this.router.navigate([`/stores`]);
+          },
+          error: (error) => {
+            this.toastr.error(error.error);
+          },
         });
     }
   }
@@ -122,32 +149,42 @@ export class MaintenanceContractComponent {
     ) {
       this.maintenanceContractService
         .updateMaintenanceContract(maintenanceContract)
-        .subscribe((data) => {
-          this.maintenanceContract = data;
-          const startDate = this.formatter.parse(data.contractStartDate);
-          const endDate = this.formatter.parse(data.contractEndDate);
-          this.maintenanceContractForm.setValue({
-            contractStartDate: startDate,
-            contractEndDate: endDate,
-            contractAmount: data.contractAmount,
-          });
-          this.maintenanceContractForm.disable();
-          this.isEditable = false;
+        .subscribe({
+          next: (data) => {
+            this.maintenanceContract = data;
+            const startDate = this.formatter.parse(data.contractStartDate);
+            const endDate = this.formatter.parse(data.contractEndDate);
+            this.maintenanceContractForm.setValue({
+              contractStartDate: startDate,
+              contractEndDate: endDate,
+              contractAmount: data.contractAmount,
+            });
+            this.maintenanceContractForm.disable();
+            this.isEditable = false;
+          },
+          error: (error) => {
+            this.toastr.error(error.error);
+          },
         });
     } else {
       this.maintenanceContractService
         .createMaintenanceContract(maintenanceContract)
-        .subscribe((data) => {
-          this.maintenanceContract = data;
-          const startDate = this.formatter.parse(data.contractStartDate);
-          const endDate = this.formatter.parse(data.contractEndDate);
-          this.maintenanceContractForm.setValue({
-            contractStartDate: startDate,
-            contractEndDate: endDate,
-            contractAmount: data.contractAmount,
-          });
-          this.maintenanceContractForm.disable();
-          this.isEditable = false;
+        .subscribe({
+          next: (data) => {
+            this.maintenanceContract = data;
+            const startDate = this.formatter.parse(data.contractStartDate);
+            const endDate = this.formatter.parse(data.contractEndDate);
+            this.maintenanceContractForm.setValue({
+              contractStartDate: startDate,
+              contractEndDate: endDate,
+              contractAmount: data.contractAmount,
+            });
+            this.maintenanceContractForm.disable();
+            this.isEditable = false;
+          },
+          error: (error) => {
+            this.toastr.error(error.error);
+          },
         });
     }
   }

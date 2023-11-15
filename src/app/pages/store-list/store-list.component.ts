@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Category, PagedData, Store } from '../../common/common.types';
 import { StoreService } from '../../services/store.service';
 import { storeNameSignal } from 'src/app/common/common.signals';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-store-list',
@@ -16,15 +17,22 @@ export class StoreListComponent implements OnInit {
   categoryId: number = 0;
   categories: Category[] = [];
 
-  constructor(private storeService: StoreService) {}
+  constructor(private storeService: StoreService, private toastr: ToastrService
+    ) {}
   ngOnInit(): void {
     this.refreshStoreList();
     this.getCategories();
   }
 
   getCategories() {
-    this.storeService.getCategoryListAsync().subscribe((data) => {
-      this.categories = data;
+    this.storeService.getCategoryListAsync()
+    .subscribe({
+      next: (data) => {
+        this.categories = data;
+      },
+      error: (err) => {
+        this.toastr.error(err.error);
+      },
     });
   }
 
@@ -37,10 +45,15 @@ export class StoreListComponent implements OnInit {
         this.pageSize,
         this.categoryId
       )
-      .subscribe((data) => {
-        this.pagedList = data;
-        this.currentPage = data.currentPage;
-        this.pageSize = data.pageSize;
+      .subscribe({
+        next: (data) => {
+          this.pagedList = data;
+          this.currentPage = data.currentPage;
+          this.pageSize = data.pageSize;
+        },
+        error: (err) => {
+          this.toastr.error(err.error);
+        },
       });
   }
 

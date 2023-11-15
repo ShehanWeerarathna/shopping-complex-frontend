@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import { storeNameSignal } from 'src/app/common/common.signals';
 import { LeaseAgreement, PagedData } from 'src/app/common/common.types';
 import { LeaseAgreementService } from 'src/app/services/lease-agreement.service';
@@ -13,7 +14,7 @@ export class LeaseAgreementsComponent implements OnInit {
   currentPage: number = 1;
   pageSize: number = 10;
 
-  constructor(private leaseAgreementService: LeaseAgreementService) {}
+  constructor(private leaseAgreementService: LeaseAgreementService, private toastr: ToastrService) {}
 
   ngOnInit(): void {
     this.refreshLeaseAgreementList();
@@ -23,10 +24,15 @@ export class LeaseAgreementsComponent implements OnInit {
   refreshLeaseAgreementList() {
     this.leaseAgreementService
       .getLeaseAgreementsAsync(this.currentPage, this.pageSize)
-      .subscribe((data) => {
-        this.pagedList = data;
-        this.currentPage = data.currentPage;
-        this.pageSize = data.pageSize;
+      .subscribe({
+        next: (data) => {
+          this.pagedList = data;
+          this.currentPage = data.currentPage;
+          this.pageSize = data.pageSize;
+        },
+        error: (err) => {
+          this.toastr.error(err.error);
+        },
       });
   }
 

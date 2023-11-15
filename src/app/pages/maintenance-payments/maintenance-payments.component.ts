@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { storeNameSignal } from 'src/app/common/common.signals';
 import { PagedData, MaintenancePayment } from 'src/app/common/common.types';
 import { MaintenancePaymentService } from 'src/app/services/maintenance-payment.service';
@@ -19,15 +20,22 @@ export class MaintenancePaymentsComponent {
 
   constructor(
     private route: ActivatedRoute,
-    private maintenancePaymentService: MaintenancePaymentService
+    private maintenancePaymentService: MaintenancePaymentService,
+    private toastr: ToastrService
   ) {
     this.storeName = storeNameSignal();
   }
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe((params) => {
-      this.maintenanceContractId = Number(params.get('maintenanceContractId'));
-      this.refreshMaintenancePayments(this.maintenanceContractId);
+    this.route.paramMap
+    .subscribe({
+      next: (params) => {
+        this.maintenanceContractId = Number(params.get('maintenanceContractId'));
+        this.refreshMaintenancePayments(this.maintenanceContractId);
+      },
+      error: (err) => {
+        this.toastr.error(err.error);
+      },
     });
   }
 
@@ -39,10 +47,15 @@ export class MaintenancePaymentsComponent {
         this.pageSize,
         maintenanceContractId
       )
-      .subscribe((maintenancePayments) => {
-        this.pagedList = maintenancePayments;
-        this.currentPage = maintenancePayments.currentPage;
-        this.pageSize = maintenancePayments.pageSize;
-      });
+      .subscribe({
+        next: (maintenancePayments) => {
+          this.pagedList = maintenancePayments;
+          this.currentPage = maintenancePayments.currentPage;
+          this.pageSize = maintenancePayments.pageSize;
+        },
+        error: (err) => {
+          this.toastr.error(err.error);
+        },
+      })
   }
 }

@@ -21,6 +21,8 @@ import { MaintenanceContractsComponent } from './pages/maintenance-contracts/mai
 import { MaintenancePaymentComponent } from './pages/maintenance-payment/maintenance-payment.component';
 import { MaintenancePaymentsComponent } from './pages/maintenance-payments/maintenance-payments.component';
 
+import { ToastrModule } from 'ngx-toastr';
+
 
 @NgModule({
   declarations: [
@@ -35,7 +37,7 @@ import { MaintenancePaymentsComponent } from './pages/maintenance-payments/maint
     MaintenanceContractComponent,
     MaintenanceContractsComponent,
     MaintenancePaymentComponent,
-    MaintenancePaymentsComponent,
+    MaintenancePaymentsComponent
   ],
   imports: [
     NgbModule,
@@ -46,7 +48,8 @@ import { MaintenancePaymentsComponent } from './pages/maintenance-payments/maint
     FormsModule,
     DialogModule,
     BrowserAnimationsModule,
-    ButtonModule
+    ButtonModule,
+    ToastrModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

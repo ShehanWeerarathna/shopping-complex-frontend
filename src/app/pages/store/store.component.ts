@@ -3,6 +3,7 @@ import { Category, Store } from 'src/app/common/common.types';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { StoreService } from 'src/app/services/store.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-store',
@@ -28,48 +29,72 @@ export class StoreComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private storeService: StoreService,
-    private router: Router
+    private router: Router, 
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
     this.getCategories();
-    this.route.paramMap.subscribe((params) => {
-      this.storeIdParam = params.get('id');
-      this.isNewStore = this.storeIdParam === 'new';
-      if (!this.isNewStore) {
-        this.storeService
-          .getStoreByIdAsync(Number(this.storeIdParam))
-          .subscribe((data) => {
-            this.store = data;
-            this.storeForm.setValue({
-              storeName: data.storeName,
-              categoryId: data.categoryId,
-              leaseAgreementId: data.leaseAgreementId ?? null,
+    this.route.paramMap
+    .subscribe({
+      next: (params) => {
+        this.storeIdParam = params.get('id');
+        this.isNewStore = this.storeIdParam === 'new';
+        if (!this.isNewStore) {
+          this.storeService
+            .getStoreByIdAsync(Number(this.storeIdParam))
+            .subscribe({
+              next: (data) => {
+                this.store = data;
+                this.storeForm.setValue({
+                  storeName: data.storeName,
+                  categoryId: data.categoryId,
+                  leaseAgreementId: data.leaseAgreementId ?? null,
+                });
+      
+                this.storeForm.disable();
+                this.isEditable = false;
+              },
+              error: (error) => {
+                this.toastr.error(error.error);
+              }
             });
-
-            this.storeForm.disable();
-            this.isEditable = false;
+        } else {
+          this.storeService.getStoreByIdAsync(0)
+          .subscribe({
+            next: (data) => {
+              this.store = data;
+              this.storeForm.setValue({
+                storeName: data.storeName,
+                categoryId: data.categoryId,
+                leaseAgreementId: data.leaseAgreementId ?? null,
+              });
+      
+              this.storeForm.enable();
+              this.isEditable = true;
+            },
+            error: (error) => {
+              this.toastr.error(error.error);
+            }
           });
-      } else {
-        this.storeService.getStoreByIdAsync(0).subscribe((data) => {
-          this.store = data;
-          this.storeForm.setValue({
-            storeName: data.storeName,
-            categoryId: data.categoryId,
-            leaseAgreementId: data.leaseAgreementId ?? null,
-          });
-
-          this.storeForm.enable();
-          this.isEditable = true;
-        });
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.error);
       }
     });
   }
 
   // Get the list of categories
   getCategories() {
-    this.storeService.getCategoryListAsync().subscribe((data) => {
-      this.categories = data;
+    this.storeService.getCategoryListAsync()
+    .subscribe({
+      next: (data) => {
+        this.categories = data;
+      },
+      error: (error) => {
+        this.toastr.error(error.error);
+      }
     });
   }
 
@@ -97,26 +122,38 @@ export class StoreComponent implements OnInit {
   // Save the store
   saveStore(store: Store) {
     if (this.store.storeId > 0) {
-      this.storeService.updateStore(store).subscribe((data) => {
-        this.store = data;
-        this.storeForm.setValue({
-          storeName: data.storeName,
-          categoryId: data.categoryId,
-          leaseAgreementId: data.leaseAgreementId ?? null,
-        });
-        this.storeForm.disable();
-        this.isEditable = false;
+      this.storeService.updateStore(store)
+      .subscribe({
+        next: (data) => {
+          this.store = data;
+          this.storeForm.setValue({
+            storeName: data.storeName,
+            categoryId: data.categoryId,
+            leaseAgreementId: data.leaseAgreementId ?? null,
+          });
+          this.storeForm.disable();
+          this.isEditable = false;
+        },
+        error: (error) => {
+          this.toastr.error(error.error);
+        }
       });
     } else {
-      this.storeService.createStore(store).subscribe((data) => {
-        this.store = data;
-        this.storeForm.setValue({
-          storeName: data.storeName,
-          categoryId: data.categoryId,
-          leaseAgreementId: data.leaseAgreementId ?? null,
-        });
-        this.storeForm.disable();
-        this.isEditable = false;
+      this.storeService.createStore(store)
+      .subscribe({
+        next: (data) => {
+          this.store = data;
+          this.storeForm.setValue({
+            storeName: data.storeName,
+            categoryId: data.categoryId,
+            leaseAgreementId: data.leaseAgreementId ?? null,
+          });
+          this.storeForm.disable();
+          this.isEditable = false;
+        },
+        error: (error) => {
+          this.toastr.error(error.error);
+        }
       });
     }
   }
@@ -125,8 +162,14 @@ export class StoreComponent implements OnInit {
   deletePayment() {
     if (this.store.storeId && this.store.storeId > 0) {
       if (confirm('Are you sure you want to delete this store?')) {
-        this.storeService.deleteStore(this.store.storeId).subscribe((data) => {
-          this.router.navigateByUrl('/stores');
+        this.storeService.deleteStore(this.store.storeId)
+        .subscribe({
+          next: (data) => {
+            this.router.navigateByUrl('/stores');
+          },
+          error: (error) => {
+            this.toastr.error(error.error);
+          }
         });
       }
     }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDateParserFormatter, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
 import { storeNameSignal } from 'src/app/common/common.signals';
 import { LeaseAgreement } from 'src/app/common/common.types';
 import { LeaseAgreementService } from 'src/app/services/lease-agreement.service';
@@ -40,37 +41,49 @@ export class LeaseAgreementComponent implements OnInit {
     private leaseAgreementService: LeaseAgreementService,
     private router: Router,
     public formatter: NgbDateParserFormatter,
+    private toastr: ToastrService
   ) {
     this.storeName = storeNameSignal();
   }
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe((params) => {
-      this.storeIdParam = params.get('storeId');
-      this.leaseAgreementService
-        .getLeaseAgreementByStoreIdAsync(Number(this.storeIdParam))
-        .subscribe((data) => {
-          this.leaseAgreement = data;
-          const startDate = this.formatter.parse(data.leaseStartDate);
-          const endDate = this.formatter.parse(data.leaseEndDate);
-          if (data.leaseAgreementId === 0) {
-            this.isEditable = true;
-            this.leaseAgreementForm.enable();
-            this.leaseAgreementForm.setValue({
-              leaseStartDate: startDate,
-              leaseEndDate: {} as NgbDateStruct,
-              leaseAmount: data.leaseAmount,
-            });
-          } else {
-            this.isEditable = false;
-            this.leaseAgreementForm.disable();
-            this.leaseAgreementForm.setValue({
-              leaseStartDate: startDate,
-              leaseEndDate: endDate,
-              leaseAmount: data.leaseAmount,
-            });
-          }
-        });
+    this.route.paramMap
+    .subscribe({
+      next: (params) => {
+        this.storeIdParam = params.get('storeId');
+        this.leaseAgreementService
+          .getLeaseAgreementByStoreIdAsync(Number(this.storeIdParam))
+          .subscribe({
+            next: (data) => {
+              this.leaseAgreement = data;
+              const startDate = this.formatter.parse(data.leaseStartDate);
+              const endDate = this.formatter.parse(data.leaseEndDate);
+              if (data.leaseAgreementId === 0) {
+                this.isEditable = true;
+                this.leaseAgreementForm.enable();
+                this.leaseAgreementForm.setValue({
+                  leaseStartDate: startDate,
+                  leaseEndDate: {} as NgbDateStruct,
+                  leaseAmount: data.leaseAmount,
+                });
+              } else {
+                this.isEditable = false;
+                this.leaseAgreementForm.disable();
+                this.leaseAgreementForm.setValue({
+                  leaseStartDate: startDate,
+                  leaseEndDate: endDate,
+                  leaseAmount: data.leaseAmount,
+                });
+              }
+            },
+            error: (error) => {
+              this.toastr.error(error.error);
+            },
+          });
+      },
+      error: (error) => {
+        this.toastr.error(error.error);
+      },
     });
   }
 
@@ -106,8 +119,13 @@ export class LeaseAgreementComponent implements OnInit {
     if (confirm(`Are you sure you want to delete this lease agreement?`)) {
       this.leaseAgreementService
         .deleteLeaseAgreement(this.leaseAgreement.leaseAgreementId)
-        .subscribe((data) => {
-          this.router.navigate([`/stores`]);
+        .subscribe({
+          next: (data) => {
+            this.router.navigate([`/stores`]);
+          },
+          error: (error) => {
+            this.toastr.error(error.error);
+          },
         });
     }
   }
@@ -120,32 +138,42 @@ export class LeaseAgreementComponent implements OnInit {
     ) {
       this.leaseAgreementService
         .updateLeaseAgreement(leaseAgreement)
-        .subscribe((data) => {
-          this.leaseAgreement = data;
-          const startDate = this.formatter.parse(data.leaseStartDate);
-          const endDate = this.formatter.parse(data.leaseEndDate);
-          this.leaseAgreementForm.setValue({
-            leaseStartDate: startDate,
-            leaseEndDate: endDate,
-            leaseAmount: data.leaseAmount,
-          });
-          this.leaseAgreementForm.disable();
-          this.isEditable = false;
+        .subscribe({
+          next: (data) => {
+            this.leaseAgreement = data;
+            const startDate = this.formatter.parse(data.leaseStartDate);
+            const endDate = this.formatter.parse(data.leaseEndDate);
+            this.leaseAgreementForm.setValue({
+              leaseStartDate: startDate,
+              leaseEndDate: endDate,
+              leaseAmount: data.leaseAmount,
+            });
+            this.leaseAgreementForm.disable();
+            this.isEditable = false;
+          },
+          error: (error) => {
+            this.toastr.error(error.error);
+          },
         });
     } else {
       this.leaseAgreementService
         .createLeaseAgreement(leaseAgreement)
-        .subscribe((data) => {
-          this.leaseAgreement = data;
-          const startDate = this.formatter.parse(data.leaseStartDate);
-          const endDate = this.formatter.parse(data.leaseEndDate);
-          this.leaseAgreementForm.setValue({
-            leaseStartDate: startDate,
-            leaseEndDate: endDate,
-            leaseAmount: data.leaseAmount,
-          });
-          this.leaseAgreementForm.disable();
-          this.isEditable = false;
+        .subscribe({
+          next: (data) => {
+            this.leaseAgreement = data;
+            const startDate = this.formatter.parse(data.leaseStartDate);
+            const endDate = this.formatter.parse(data.leaseEndDate);
+            this.leaseAgreementForm.setValue({
+              leaseStartDate: startDate,
+              leaseEndDate: endDate,
+              leaseAmount: data.leaseAmount,
+            });
+            this.leaseAgreementForm.disable();
+            this.isEditable = false;
+          },
+          error: (error) => {
+            this.toastr.error(error);
+          },
         });
     }
   }

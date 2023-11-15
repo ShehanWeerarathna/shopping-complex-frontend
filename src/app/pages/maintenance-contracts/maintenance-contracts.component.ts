@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import { storeNameSignal } from 'src/app/common/common.signals';
 import { PagedData, MaintenanceContract } from 'src/app/common/common.types';
 import { MaintenanceContractService } from 'src/app/services/maintenance-contract.service';
@@ -14,7 +15,10 @@ export class MaintenanceContractsComponent {
   currentPage: number = 1;
   pageSize: number = 10;
 
-  constructor(private maintenanceContractService: MaintenanceContractService) {}
+  constructor(
+    private maintenanceContractService: MaintenanceContractService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
     this.refreshMaintenanceContractList();
@@ -24,10 +28,15 @@ export class MaintenanceContractsComponent {
   refreshMaintenanceContractList() {
     this.maintenanceContractService
       .getMaintenanceContractsAsync(this.currentPage, this.pageSize)
-      .subscribe((data) => {
-        this.pagedList = data;
-        this.currentPage = data.currentPage;
-        this.pageSize = data.pageSize;
+      .subscribe({
+        next: (data) => {
+          this.pagedList = data;
+          this.currentPage = data.currentPage;
+          this.pageSize = data.pageSize;
+        },
+        error: (err) => {
+          this.toastr.error(err.error);
+        },
       });
   }
 

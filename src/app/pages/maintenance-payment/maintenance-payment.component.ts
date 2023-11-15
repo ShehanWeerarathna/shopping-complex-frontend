@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDateParserFormatter, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
 import { storeNameSignal } from 'src/app/common/common.signals';
 import { MaintenancePayment } from 'src/app/common/common.types';
 import { MaintenancePaymentService } from 'src/app/services/maintenance-payment.service';
@@ -33,6 +34,7 @@ export class MaintenancePaymentComponent {
     private maintenancePaymentService: MaintenancePaymentService,
     private router: Router,
     public formatter: NgbDateParserFormatter,
+    private toastr: ToastrService
   ) {
     this.storeName = storeNameSignal();
   }
@@ -45,27 +47,37 @@ export class MaintenancePaymentComponent {
       if (!this.isNewPayment) {
         this.maintenancePaymentService
           .getMaintenancePaymentByIdAsync(Number(this.paymentIdParam))
-          .subscribe((data) => {
-            this.maintenancePayment = data;
-            const paymentDate = this.formatter.parse(data.paymentDate);
-            this.paymentForm.setValue({
-              paymentDate: paymentDate,
-              amount: data.amount,
-            });
+          .subscribe({
+            next: (data) => {
+              this.maintenancePayment = data;
+              const paymentDate = this.formatter.parse(data.paymentDate);
+              this.paymentForm.setValue({
+                paymentDate: paymentDate,
+                amount: data.amount,
+              });
+            },
+            error: (error) => {
+              this.toastr.error(error.error);
+            }
           });
         this.isEditable = false;
         this.paymentForm.disable();
       } else {
         this.maintenancePaymentService
           .getMaintenancePaymentByIdAsync(0)
-          .subscribe((data) => {
-            this.maintenancePayment = data;
-            const paymentDate = this.formatter.parse(data.paymentDate);
-            this.paymentForm.setValue({
-              paymentDate: paymentDate,
-              amount: data.amount,
-            });
-          });
+          .subscribe({
+            next: (data) => {
+              this.maintenancePayment = data;
+              const paymentDate = this.formatter.parse(data.paymentDate);
+              this.paymentForm.setValue({
+                paymentDate: paymentDate,
+                amount: data.amount,
+              });
+            },
+            error: (error) => {
+              this.toastr.error(error.error);
+            }
+          })
         this.isEditable = true;
         this.paymentForm.enable();
       }
@@ -86,11 +98,16 @@ export class MaintenancePaymentComponent {
     if (confirm(`Are you sure you want to delete this payment?`)) {
       this.maintenancePaymentService
         .deleteMaintenancePayment(this.maintenancePayment.maintenancePaymentId)
-        .subscribe((data) => {
-          this.router.navigate([
-            `/maintenance-payments/${this.maintenanceContractId}`,
-          ]);
-        });
+        .subscribe({
+          next: (data) => {
+            this.router.navigate([
+              `/maintenance-payments/${this.maintenanceContractId}`,
+            ]);
+          },
+          error: (error) => {
+            this.toastr.error(error.error);
+          }
+        })
     }
   }
 
@@ -111,31 +128,41 @@ export class MaintenancePaymentComponent {
 
   // Save the payment
   saveMaintenancePayment(maintenancePayment: MaintenancePayment) {
-    if (this.isNewPayment) {
+    if (maintenancePayment.maintenancePaymentId === 0) {
       this.maintenancePaymentService
         .createMaintenancePayment(maintenancePayment)
-        .subscribe((data) => {
-          this.maintenancePayment = data;
-          const paymentDate = this.formatter.parse(data.paymentDate);
-          this.paymentForm.setValue({
-            paymentDate: paymentDate,
-            amount: data.amount,
-          });
-          this.isEditable = false;
-          this.paymentForm.disable();
+        .subscribe({
+          next: (data) => {
+            this.maintenancePayment = data;
+            const paymentDate = this.formatter.parse(data.paymentDate);
+            this.paymentForm.setValue({
+              paymentDate: paymentDate,
+              amount: data.amount,
+            });
+            this.isEditable = false;
+            this.paymentForm.disable();
+          },
+          error: (error) => {
+            this.toastr.error(error.error);
+          }
         });
     } else {
       this.maintenancePaymentService
         .updateMaintenancePayment(maintenancePayment)
-        .subscribe((data) => {
-          this.maintenancePayment = data;
-          const paymentDate = this.formatter.parse(data.paymentDate);
-          this.paymentForm.setValue({
-            paymentDate: paymentDate,
-            amount: data.amount,
-          });
-          this.isEditable = false;
-          this.paymentForm.disable();
+        .subscribe({
+          next: (data) => {
+            this.maintenancePayment = data;
+            const paymentDate = this.formatter.parse(data.paymentDate);
+            this.paymentForm.setValue({
+              paymentDate: paymentDate,
+              amount: data.amount,
+            });
+            this.isEditable = false;
+            this.paymentForm.disable();
+          },
+          error: (error) => {
+            this.toastr.error(error.error);
+          }
         });
     }
   }

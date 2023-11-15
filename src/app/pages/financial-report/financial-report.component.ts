@@ -4,6 +4,7 @@ import {
   NgbCalendar,
   NgbDateParserFormatter,
 } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
 import {
   PagedData,
   LeasePayment,
@@ -28,7 +29,8 @@ export class FinancialReportComponent implements OnInit {
   constructor(
     private calendar: NgbCalendar,
     public formatter: NgbDateParserFormatter,
-    private financialReportService: FinancialReportService
+    private financialReportService: FinancialReportService,
+    private toastr: ToastrService
   ) {
     this.fromDate = calendar.getToday();
     this.toDate = calendar.getNext(calendar.getToday(), 'y', 1);
@@ -92,8 +94,13 @@ export class FinancialReportComponent implements OnInit {
           this.formatter.format(this.fromDate),
           this.formatter.format(this.toDate)
         )
-        .subscribe((fr) => {
-          this.financialReport = fr;
+        .subscribe({
+          next: (data) => {
+            this.financialReport = data;
+          },
+          error: (error) => {
+            this.toastr.error(error.error);
+          },
         });
     }
   }
