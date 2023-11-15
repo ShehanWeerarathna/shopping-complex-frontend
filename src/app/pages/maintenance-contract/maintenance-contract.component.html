@@ -53,6 +53,24 @@
           Select Date
         </button>
       </div>
+      <div
+        *ngIf="
+          maintenanceContractForm.controls.contractStartDate?.invalid &&
+          maintenanceContractForm.controls.contractStartDate?.touched
+        "
+        class="alert alert-danger"
+      >
+        <div
+          *ngIf="maintenanceContractForm.controls.contractStartDate?.errors?.['ngbDate']"
+        >
+          The selected end date must be later than the start date.
+        </div>
+        <div
+          *ngIf="maintenanceContractForm.controls.contractStartDate?.errors?.['required']"
+        >
+          Start date is required.
+        </div>
+      </div>
     </div>
   </div>
 
@@ -78,6 +96,24 @@
           Select Date
         </button>
       </div>
+      <div
+        *ngIf="
+          maintenanceContractForm.controls.contractEndDate?.invalid &&
+          maintenanceContractForm.controls.contractEndDate?.touched
+        "
+        class="alert alert-danger"
+      >
+        <div
+          *ngIf="maintenanceContractForm.controls.contractEndDate?.errors?.['ngbDate']"
+        >
+          The selected end date must be later than the start date.
+        </div>
+        <div
+          *ngIf="maintenanceContractForm.controls.contractEndDate?.errors?.['required']"
+        >
+          End date is required.
+        </div>
+      </div>
     </div>
   </div>
 
@@ -91,6 +127,9 @@
 
   <ng-template #notEditable>
     <div class="form-group mt-3">
+      <button class="btn btn-primary me-2" routerLink="/maintenance-contracts">
+        Back
+      </button>
       <button (click)="editForm()" class="btn btn-warning me-2">Edit</button>
       <button (click)="deleteProduct()" class="btn btn-danger">Delete</button>
     </div>

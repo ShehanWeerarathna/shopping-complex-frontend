@@ -2,7 +2,7 @@
   <div class="col-md-12">
     <h2>Lease Agreements</h2>
 
-    <div *ngIf="pagedList.pagedData && pagedList.pagedData.length > 0">
+    <div *ngIf="pagedList.pagedData && pagedList.pagedData.length > 0;else elseBlock">
       <table class="table table-striped">
         <thead>
           <tr>
@@ -67,5 +67,11 @@
         </select>
       </div>
     </div>
+    <ng-template #elseBlock>
+      <div class="alert alert-info">
+        <h4 class="alert-heading">No Lease Agreements</h4>
+        <p>There are no lease agreements to display.</p>
+      </div>
+    </ng-template>
   </div>
 </div>

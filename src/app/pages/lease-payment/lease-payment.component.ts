@@ -108,6 +108,7 @@ export class LeasePaymentComponent implements OnInit {
   saveLeasePayment(leasePayment:LeasePayment){
     if(leasePayment.leasePaymentId ===0){
       this.leasePaymentService.createLeasePayment(leasePayment).subscribe((data) => {
+        this.leasePayment = data;
         const agreementDate: NgbDateStruct = {
           year: new Date(data.paymentDate).getFullYear(),
           month: new Date(data.paymentDate).getMonth() + 1,
@@ -122,6 +123,7 @@ export class LeasePaymentComponent implements OnInit {
       });
     }else{
       this.leasePaymentService.updateLeasePayment(leasePayment).subscribe((data) => {
+        this.leasePayment = data;
         const agreementDate: NgbDateStruct = {
           year: new Date(data.paymentDate).getFullYear(),
           month: new Date(data.paymentDate).getMonth() + 1,

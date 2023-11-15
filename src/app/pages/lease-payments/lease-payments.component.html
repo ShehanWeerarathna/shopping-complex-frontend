@@ -13,7 +13,7 @@
 </div>
 
 <div
-  *ngIf="pagedList.pagedData && pagedList.pagedData.length > 0"
+  *ngIf="pagedList.pagedData && pagedList.pagedData.length > 0 else elseBlock"
   class="row justify-content-center"
 >
   <div class="col-md-12">
@@ -68,3 +68,10 @@
     </div>
   </div>
 </div>
+<ng-template #elseBlock>
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+      <p>No payments found.</p>
+    </div>
+  </div>
+</ng-template>

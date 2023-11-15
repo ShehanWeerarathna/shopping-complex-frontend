@@ -23,13 +23,31 @@
   </div>
 </div>
 
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="input-group mb-3">
+      <select
+  id="categoryId"
+  [(ngModel)]="categoryId"
+  (change)="refreshStoreList()"
+  class="form-select"
+>
+  <option value="0">All</option>
+  <option *ngFor="let selectItem of categories" [value]="selectItem.categoryId">
+    {{ selectItem.categoryName }}
+  </option>
+</select>
+    </div>
+  </div>
+</div>
+
 <div class="row mb-3 justify-content-end">
   <div class="col-md-3 d-flex justify-content-end">
     <a class="btn btn-primary" routerLink="/stores/new">Add new store</a>
   </div>
 </div>
 
-<div class="row justify-content-center">
+<div class="row justify-content-center" *ngIf="pagedList.pagedData&&pagedList.pagedData.length>0 else elseBlock">
   <div class="col-md-12">
     <table class="table table-striped">
       <thead>
@@ -118,3 +136,10 @@
     </div>
   </div>
 </div>
+<ng-template #elseBlock>
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+      <h2>No stores found</h2>
+    </div>
+  </div>
+</ng-template>

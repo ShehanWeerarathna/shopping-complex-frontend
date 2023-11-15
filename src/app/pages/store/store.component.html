@@ -65,9 +65,20 @@
     </div>
   </ng-template>
   <ng-template #notEditable>
-    <div class="form-group">
-      <button (click)="editForm()" class="btn btn-warning m-2">Edit</button>
-      <button (click)="deleteProduct()" class="btn btn-danger">Delete</button>
+    <div class="row">
+      <div class="col-6">
+        <div class="d-flex align-items-center justify-content-start">
+          <button (click)="editForm()" class="btn btn-warning m-2">Edit</button>
+          <button (click)="deleteProduct()" class="btn btn-danger">Delete</button>
+        </div>
+      </div>
+  
+      <div class="col-6">
+        <div class="d-flex align-items-center justify-content-end">
+          <button *ngIf="store.maintenanceContractId" routerLink="/maintenance-contract/{{ store.storeId }}" class="btn btn-primary m-2">Maintenance Contract</button>
+          <button *ngIf="store.leaseAgreementId" routerLink="/lease-agreement/{{ store.storeId }}" class="btn btn-primary">Lease Agreement</button>
+        </div>
+      </div>
     </div>
   </ng-template>
 </form>

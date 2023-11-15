@@ -115,6 +115,7 @@ export class MaintenancePaymentComponent {
       this.maintenancePaymentService
         .createMaintenancePayment(maintenancePayment)
         .subscribe((data) => {
+          this.maintenancePayment = data;
           const agreementDate: NgbDateStruct = {
             year: new Date(data.paymentDate).getFullYear(),
             month: new Date(data.paymentDate).getMonth() + 1,
@@ -131,6 +132,7 @@ export class MaintenancePaymentComponent {
       this.maintenancePaymentService
         .updateMaintenancePayment(maintenancePayment)
         .subscribe((data) => {
+          this.maintenancePayment = data;
           const agreementDate: NgbDateStruct = {
             year: new Date(data.paymentDate).getFullYear(),
             month: new Date(data.paymentDate).getMonth() + 1,

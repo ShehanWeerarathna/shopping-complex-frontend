@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   NgbDate,
   NgbCalendar,
@@ -16,7 +16,7 @@ import { FinancialReportService } from 'src/app/services/financial-report.servic
   templateUrl: './financial-report.component.html',
   styleUrls: ['./financial-report.component.css'],
 })
-export class FinancialReportComponent {
+export class FinancialReportComponent implements OnInit {
   hoveredDate: NgbDate | null = null;
 
   fromDate: NgbDate | null;
@@ -31,7 +31,10 @@ export class FinancialReportComponent {
     private financialReportService: FinancialReportService
   ) {
     this.fromDate = calendar.getToday();
-    this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
+    this.toDate = calendar.getNext(calendar.getToday(), 'y', 1);
+  }
+  ngOnInit(): void {
+    this.getReport();
   }
 
   onDateSelection(date: NgbDate) {
