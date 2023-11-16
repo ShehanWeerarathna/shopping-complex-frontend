@@ -26,7 +26,7 @@ export class LeasePaymentComponent implements OnInit {
       this.formatter.parse(today.toISOString()) as NgbDateStruct,
       Validators.required
     ),
-    amount: new FormControl(0, [Validators.required, Validators.min(1)]),
+    amount: new FormControl<number|null>(null, [Validators.required, Validators.min(1)]),
   });
 
   constructor(
@@ -77,7 +77,7 @@ export class LeasePaymentComponent implements OnInit {
                   const paymentDate = this.formatter.parse(data.paymentDate);
                   this.paymentForm.setValue({
                     paymentDate: paymentDate,
-                    amount: data.amount,
+                    amount: null,
                   });
                 },
                 error: (error) => {

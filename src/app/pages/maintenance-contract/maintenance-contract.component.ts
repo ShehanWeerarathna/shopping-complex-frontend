@@ -33,7 +33,7 @@ export class MaintenanceContractComponent {
       {} as NgbDateStruct,
       Validators.required
     ),
-    contractAmount: new FormControl<number>(0, [
+    contractAmount: new FormControl<number|null>(null, [
       Validators.required,
       Validators.min(1),
     ]),
@@ -76,7 +76,7 @@ export class MaintenanceContractComponent {
                   this.maintenanceContractForm.setValue({
                     contractStartDate: startDate,
                     contractEndDate: {} as NgbDateStruct,
-                    contractAmount: data.contractAmount,
+                    contractAmount: null,
                     description: data.description ?? null,
                   });
                 } else {

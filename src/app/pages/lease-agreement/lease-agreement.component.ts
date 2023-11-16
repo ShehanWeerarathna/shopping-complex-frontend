@@ -33,7 +33,7 @@ export class LeaseAgreementComponent implements OnInit {
       {} as NgbDateStruct,
       Validators.required
     ),
-    leaseAmount: new FormControl<number>(0, [
+    leaseAmount: new FormControl<number|null>(null, [
       Validators.required,
       Validators.min(1),
     ]),
@@ -71,7 +71,7 @@ export class LeaseAgreementComponent implements OnInit {
                 this.leaseAgreementForm.setValue({
                   leaseStartDate: startDate,
                   leaseEndDate: {} as NgbDateStruct,
-                  leaseAmount: data.leaseAmount,
+                  leaseAmount: null,
                   description: data.description ?? null,
                 });
               } else {
