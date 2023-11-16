@@ -37,6 +37,7 @@ export class LeaseAgreementComponent implements OnInit {
       Validators.required,
       Validators.min(1),
     ]),
+    description: new FormControl<string|null>('',[Validators.maxLength(500)]),
   });
 
   constructor(
@@ -71,6 +72,7 @@ export class LeaseAgreementComponent implements OnInit {
                   leaseStartDate: startDate,
                   leaseEndDate: {} as NgbDateStruct,
                   leaseAmount: data.leaseAmount,
+                  description: data.description ?? null,
                 });
               } else {
                 this.isEditable = false;
@@ -79,6 +81,7 @@ export class LeaseAgreementComponent implements OnInit {
                   leaseStartDate: startDate,
                   leaseEndDate: endDate,
                   leaseAmount: data.leaseAmount,
+                  description: data.description ?? null,
                 });
               }
             },
@@ -110,6 +113,7 @@ export class LeaseAgreementComponent implements OnInit {
       ),
 
       leaseAmount: this.leaseAgreementForm.value.leaseAmount ?? 0,
+      description: this.leaseAgreementForm.value.description ?? null,
     };
 
     this.saveLeaseAgreement(leaseAgreement);
@@ -158,6 +162,7 @@ export class LeaseAgreementComponent implements OnInit {
               leaseStartDate: startDate,
               leaseEndDate: endDate,
               leaseAmount: data.leaseAmount,
+              description: data.description ?? null,
             });
             this.leaseAgreementForm.disable();
             this.isEditable = false;
@@ -178,6 +183,7 @@ export class LeaseAgreementComponent implements OnInit {
               leaseStartDate: startDate,
               leaseEndDate: endDate,
               leaseAmount: data.leaseAmount,
+              description: data.description ?? null,
             });
             this.leaseAgreementForm.disable();
             this.isEditable = false;

@@ -37,6 +37,7 @@ export class MaintenanceContractComponent {
       Validators.required,
       Validators.min(1),
     ]),
+    description: new FormControl<string|null>('',[Validators.maxLength(500)]),
   });
 
   constructor(
@@ -76,6 +77,7 @@ export class MaintenanceContractComponent {
                     contractStartDate: startDate,
                     contractEndDate: {} as NgbDateStruct,
                     contractAmount: data.contractAmount,
+                    description: data.description ?? null,
                   });
                 } else {
                   this.isEditable = false;
@@ -84,6 +86,7 @@ export class MaintenanceContractComponent {
                     contractStartDate: startDate,
                     contractEndDate: endDate,
                     contractAmount: data.contractAmount,
+                    description: data.description ?? null,
                   });
                 }
               },
@@ -114,6 +117,7 @@ export class MaintenanceContractComponent {
         this.maintenanceContractForm.value.contractEndDate as NgbDateStruct
       ),
       contractAmount: this.maintenanceContractForm.value.contractAmount ?? 0,
+      description: this.maintenanceContractForm.value.description ?? null,
     };
 
     this.saveMaintenanceContract(maintenanceContract);
@@ -163,6 +167,7 @@ export class MaintenanceContractComponent {
               contractStartDate: startDate,
               contractEndDate: endDate,
               contractAmount: data.contractAmount,
+              description: data.description ?? null,
             });
             this.maintenanceContractForm.disable();
             this.isEditable = false;
@@ -183,6 +188,7 @@ export class MaintenanceContractComponent {
               contractStartDate: startDate,
               contractEndDate: endDate,
               contractAmount: data.contractAmount,
+              description: data.description ?? null,
             });
             this.maintenanceContractForm.disable();
             this.isEditable = false;

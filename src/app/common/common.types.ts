@@ -28,6 +28,7 @@ export interface LeaseAgreement {
   leaseStartDate: string
   leaseEndDate: string
   leaseAmount: number
+  description?: string | null
   store?: Store
   payments?: LeasePayment[]
 }
@@ -38,6 +39,7 @@ export interface MaintenanceContract {
   contractStartDate: string
   contractEndDate: string
   contractAmount: number
+  description?: string | null
   store?: Store
   payments?: MaintenancePayment[]
 }
