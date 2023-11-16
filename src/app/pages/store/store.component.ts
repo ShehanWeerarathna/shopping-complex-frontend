@@ -34,55 +34,59 @@ export class StoreComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.refreshPageData();
+  }
+
+  private refreshPageData() {
     this.getCategories();
     this.route.paramMap
-    .subscribe({
-      next: (params) => {
-        this.storeIdParam = params.get('id');
-        this.isNewStore = this.storeIdParam === 'new';
-        if (!this.isNewStore) {
-          this.storeService
-            .getStoreByIdAsync(Number(this.storeIdParam))
-            .subscribe({
-              next: (data) => {
-                this.store = data;
-                this.storeForm.setValue({
-                  storeName: data.storeName,
-                  categoryId: data.categoryId,
-                  leaseAgreementId: data.leaseAgreementId ?? null,
-                });
-      
-                this.storeForm.disable();
-                this.isEditable = false;
-              },
-              error: (error) => {
-                this.toastr.error(error.error);
-              }
-            });
-        } else {
-          this.storeService.getStoreByIdAsync(0)
-          .subscribe({
-            next: (data) => {
-              this.store = data;
-              this.storeForm.setValue({
-                storeName: data.storeName,
-                categoryId: data.categoryId,
-                leaseAgreementId: data.leaseAgreementId ?? null,
+      .subscribe({
+        next: (params) => {
+          this.storeIdParam = params.get('id');
+          this.isNewStore = this.storeIdParam === 'new';
+          if (!this.isNewStore) {
+            this.storeService
+              .getStoreByIdAsync(Number(this.storeIdParam))
+              .subscribe({
+                next: (data) => {
+                  this.store = data;
+                  this.storeForm.setValue({
+                    storeName: data.storeName,
+                    categoryId: data.categoryId,
+                    leaseAgreementId: data.leaseAgreementId ?? null,
+                  });
+
+                  this.storeForm.disable();
+                  this.isEditable = false;
+                },
+                error: (error) => {
+                  this.toastr.error(error.error.Message);
+                }
               });
-      
-              this.storeForm.enable();
-              this.isEditable = true;
-            },
-            error: (error) => {
-              this.toastr.error(error.error);
-            }
-          });
+          } else {
+            this.storeService.getStoreByIdAsync(0)
+              .subscribe({
+                next: (data) => {
+                  this.store = data;
+                  this.storeForm.setValue({
+                    storeName: data.storeName,
+                    categoryId: data.categoryId,
+                    leaseAgreementId: data.leaseAgreementId ?? null,
+                  });
+
+                  this.storeForm.enable();
+                  this.isEditable = true;
+                },
+                error: (error) => {
+                  this.toastr.error(error.error.Message);
+                }
+              });
+          }
+        },
+        error: (error) => {
+          this.toastr.error(error.error.Message);
         }
-      },
-      error: (error) => {
-        this.toastr.error(error.error);
-      }
-    });
+      });
   }
 
   // Get the list of categories
@@ -93,7 +97,7 @@ export class StoreComponent implements OnInit {
         this.categories = data;
       },
       error: (error) => {
-        this.toastr.error(error.error);
+        this.toastr.error(error.error.Message);
       }
     });
   }
@@ -135,7 +139,7 @@ export class StoreComponent implements OnInit {
           this.isEditable = false;
         },
         error: (error) => {
-          this.toastr.error(error.error);
+          this.toastr.error(error.error.Message);
         }
       });
     } else {
@@ -152,7 +156,7 @@ export class StoreComponent implements OnInit {
           this.isEditable = false;
         },
         error: (error) => {
-          this.toastr.error(error.error);
+          this.toastr.error(error.error.Message);
         }
       });
     }
@@ -168,7 +172,7 @@ export class StoreComponent implements OnInit {
             this.router.navigateByUrl('/stores');
           },
           error: (error) => {
-            this.toastr.error(error.error);
+            this.toastr.error(error.error.Message);
           }
         });
       }

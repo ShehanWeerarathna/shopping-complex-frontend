@@ -39,54 +39,58 @@ export class LeasePaymentComponent implements OnInit {
     this.storeName = storeNameSignal();
   }
   ngOnInit(): void {
+    this.refreshPageData();
+  }
+
+  private refreshPageData() {
     this.route.paramMap
-    .subscribe({
-      next: (params) => {
-        this.leaseAgreementId = Number(params.get('leaseAgreementId'));
-        this.paymentIdParam = params.get('id');
-        this.isNewPayment = this.paymentIdParam === 'new';
-        if (!this.isNewPayment) {
-          this.leasePaymentService
-            .getLeasePaymentByIdAsync(Number(this.paymentIdParam))
-            .subscribe({
-              next: (data) => {
-                this.leasePayment = data;
-                const paymentDate = this.formatter.parse(data.paymentDate);
-                this.paymentForm.setValue({
-                  paymentDate: paymentDate,
-                  amount: data.amount,
-                });
-              },
-              error: (error) => {
-                this.toastr.error(error.error);
-              }
-            });
-          this.isEditable = false;
-          this.paymentForm.disable();
-        } else {
-          this.leasePaymentService
-            .getLeasePaymentByIdAsync(0)
-            .subscribe({
-              next: (data) => {
-                this.leasePayment = data;
-                const paymentDate = this.formatter.parse(data.paymentDate);
-                this.paymentForm.setValue({
-                  paymentDate: paymentDate,
-                  amount: data.amount,
-                });
-              },
-              error: (error) => {
-                this.toastr.error(error.error);
-              }
-            });
-          this.isEditable = true;
-          this.paymentForm.enable();
+      .subscribe({
+        next: (params) => {
+          this.leaseAgreementId = Number(params.get('leaseAgreementId'));
+          this.paymentIdParam = params.get('id');
+          this.isNewPayment = this.paymentIdParam === 'new';
+          if (!this.isNewPayment) {
+            this.leasePaymentService
+              .getLeasePaymentByIdAsync(Number(this.paymentIdParam))
+              .subscribe({
+                next: (data) => {
+                  this.leasePayment = data;
+                  const paymentDate = this.formatter.parse(data.paymentDate);
+                  this.paymentForm.setValue({
+                    paymentDate: paymentDate,
+                    amount: data.amount,
+                  });
+                },
+                error: (error) => {
+                  this.toastr.error(error.error.Message);
+                }
+              });
+            this.isEditable = false;
+            this.paymentForm.disable();
+          } else {
+            this.leasePaymentService
+              .getLeasePaymentByIdAsync(0)
+              .subscribe({
+                next: (data) => {
+                  this.leasePayment = data;
+                  const paymentDate = this.formatter.parse(data.paymentDate);
+                  this.paymentForm.setValue({
+                    paymentDate: paymentDate,
+                    amount: data.amount,
+                  });
+                },
+                error: (error) => {
+                  this.toastr.error(error.error.Message);
+                }
+              });
+            this.isEditable = true;
+            this.paymentForm.enable();
+          }
+        },
+        error: (error) => {
+          this.toastr.error(error.error.Message);
         }
-      },
-      error: (error) => {
-        this.toastr.error(error.error);
-      }
-    });
+      });
   }
 
   // Enable the form for editing
@@ -108,7 +112,7 @@ export class LeasePaymentComponent implements OnInit {
             this.router.navigate([`/lease-payments/${this.leaseAgreementId}`]);
           },
           error: (error) => {
-            this.toastr.error(error.error);
+            this.toastr.error(error.error.Message);
           },
         });
     }
@@ -146,7 +150,7 @@ export class LeasePaymentComponent implements OnInit {
             this.paymentForm.disable();
           },
           error: (error) => {
-            this.toastr.error(error.error);
+            this.toastr.error(error.error.Message);
           }
         });
     } else {
@@ -164,7 +168,7 @@ export class LeasePaymentComponent implements OnInit {
             this.paymentForm.disable();
           },
           error: (error) => {
-            this.toastr.error(error.error);
+            this.toastr.error(error.error.Message);
           }
         });
     }

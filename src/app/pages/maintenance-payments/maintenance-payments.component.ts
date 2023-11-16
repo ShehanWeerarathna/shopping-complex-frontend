@@ -27,16 +27,20 @@ export class MaintenancePaymentsComponent {
   }
 
   ngOnInit(): void {
+    this.refreshPageData();
+  }
+
+  private refreshPageData() {
     this.route.paramMap
-    .subscribe({
-      next: (params) => {
-        this.maintenanceContractId = Number(params.get('maintenanceContractId'));
-        this.refreshMaintenancePayments(this.maintenanceContractId);
-      },
-      error: (err) => {
-        this.toastr.error(err.error);
-      },
-    });
+      .subscribe({
+        next: (params) => {
+          this.maintenanceContractId = Number(params.get('maintenanceContractId'));
+          this.refreshMaintenancePayments(this.maintenanceContractId);
+        },
+        error: (error) => {
+          this.toastr.error(error.error.Message);
+        },
+      });
   }
 
   // Get the maintenance payments.
@@ -53,8 +57,8 @@ export class MaintenancePaymentsComponent {
           this.currentPage = maintenancePayments.currentPage;
           this.pageSize = maintenancePayments.pageSize;
         },
-        error: (err) => {
-          this.toastr.error(err.error);
+        error: (error) => {
+          this.toastr.error(error.error.Message);
         },
       })
   }

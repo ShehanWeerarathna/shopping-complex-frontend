@@ -30,8 +30,8 @@ export class StoreListComponent implements OnInit {
       next: (data) => {
         this.categories = data;
       },
-      error: (err) => {
-        this.toastr.error(err.error);
+      error: (error) => {
+        this.toastr.error(error.error.Message);
       },
     });
   }
@@ -51,8 +51,8 @@ export class StoreListComponent implements OnInit {
           this.currentPage = data.currentPage;
           this.pageSize = data.pageSize;
         },
-        error: (err) => {
-          this.toastr.error(err.error);
+        error: (error) => {
+          this.toastr.error(error.error.Message);
         },
       });
   }

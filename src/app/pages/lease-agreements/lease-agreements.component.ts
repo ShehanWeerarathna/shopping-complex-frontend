@@ -30,8 +30,8 @@ export class LeaseAgreementsComponent implements OnInit {
           this.currentPage = data.currentPage;
           this.pageSize = data.pageSize;
         },
-        error: (err) => {
-          this.toastr.error(err.error);
+        error: (error) => {
+          this.toastr.error(error.error.Message);
         },
       });
   }

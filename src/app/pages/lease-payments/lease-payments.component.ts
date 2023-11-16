@@ -26,16 +26,20 @@ export class LeasePaymentsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.refreshPageData();
+  }
+
+  private refreshPageData() {
     this.route.paramMap
-    .subscribe({
-      next: (params) => {
-        this.leaseAgreementId = Number(params.get('leaseAgreementId'));
-        this.refreshLeasePayments(this.leaseAgreementId);
-      },
-      error: (err) => {
-        this.toastr.error(err.error);
-      },
-    });
+      .subscribe({
+        next: (params) => {
+          this.leaseAgreementId = Number(params.get('leaseAgreementId'));
+          this.refreshLeasePayments(this.leaseAgreementId);
+        },
+        error: (error) => {
+          this.toastr.error(error.error.Message);
+        },
+      });
   }
 
   // Get the lease payments for the selected lease agreement
@@ -48,8 +52,8 @@ export class LeasePaymentsComponent implements OnInit {
           this.currentPage = leasePayments.currentPage;
           this.pageSize = leasePayments.pageSize;
         },
-        error: (err) => {
-          this.toastr.error(err.error);
+        error: (error) => {
+          this.toastr.error(error.error.Message);
         },
       });
   }

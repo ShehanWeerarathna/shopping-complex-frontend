@@ -55,7 +55,6 @@ export class FinancialReportComponent implements OnInit {
     }
   }
 
-  
   isHovered(date: NgbDate) {
     return (
       this.fromDate &&
@@ -99,7 +98,7 @@ export class FinancialReportComponent implements OnInit {
             this.financialReport = data;
           },
           error: (error) => {
-            this.toastr.error(error.error);
+            this.toastr.error(error.error.Message);
           },
         });
     }

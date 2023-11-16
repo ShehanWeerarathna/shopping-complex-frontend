@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbDateParserFormatter, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbDateParserFormatter,
+  NgbDateStruct,
+} from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { storeNameSignal } from 'src/app/common/common.signals';
 import { LeaseAgreement } from 'src/app/common/common.types';
@@ -47,8 +50,11 @@ export class LeaseAgreementComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.paramMap
-    .subscribe({
+    this.refreshPageData();
+  }
+
+  private refreshPageData() {
+    this.route.paramMap.subscribe({
       next: (params) => {
         this.storeIdParam = params.get('storeId');
         this.leaseAgreementService
@@ -77,12 +83,12 @@ export class LeaseAgreementComponent implements OnInit {
               }
             },
             error: (error) => {
-              this.toastr.error(error.error);
+              this.toastr.error(error.error.Message);
             },
           });
       },
       error: (error) => {
-        this.toastr.error(error.error);
+        this.toastr.error(error.error.Message);
       },
     });
   }
@@ -96,8 +102,12 @@ export class LeaseAgreementComponent implements OnInit {
     const leaseAgreement: LeaseAgreement = {
       leaseAgreementId: this.leaseAgreement.leaseAgreementId,
       storeId: Number(this.storeIdParam),
-      leaseStartDate: this.formatter.format(this.leaseAgreementForm.value.leaseStartDate as NgbDateStruct),
-      leaseEndDate: this.formatter.format(this.leaseAgreementForm.value.leaseEndDate as NgbDateStruct),
+      leaseStartDate: this.formatter.format(
+        this.leaseAgreementForm.value.leaseStartDate as NgbDateStruct
+      ),
+      leaseEndDate: this.formatter.format(
+        this.leaseAgreementForm.value.leaseEndDate as NgbDateStruct
+      ),
 
       leaseAmount: this.leaseAgreementForm.value.leaseAmount ?? 0,
     };
@@ -124,7 +134,8 @@ export class LeaseAgreementComponent implements OnInit {
             this.router.navigate([`/stores`]);
           },
           error: (error) => {
-            this.toastr.error(error.error);
+            console.log(error);
+            this.toastr.error(error.error.Message);
           },
         });
     }
@@ -152,7 +163,7 @@ export class LeaseAgreementComponent implements OnInit {
             this.isEditable = false;
           },
           error: (error) => {
-            this.toastr.error(error.error);
+            this.toastr.error(error.error.Message);
           },
         });
     } else {
@@ -172,7 +183,7 @@ export class LeaseAgreementComponent implements OnInit {
             this.isEditable = false;
           },
           error: (error) => {
-            this.toastr.error(error);
+            this.toastr.error(error.error.Message);
           },
         });
     }

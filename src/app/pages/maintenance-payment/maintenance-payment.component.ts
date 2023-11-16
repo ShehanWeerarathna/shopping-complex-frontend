@@ -40,6 +40,10 @@ export class MaintenancePaymentComponent {
   }
 
   ngOnInit(): void {
+    this.refreshPageData();
+  }
+
+  private refreshPageData() {
     this.route.paramMap.subscribe((params) => {
       this.maintenanceContractId = Number(params.get('maintenanceContractId'));
       this.paymentIdParam = params.get('id');
@@ -57,7 +61,7 @@ export class MaintenancePaymentComponent {
               });
             },
             error: (error) => {
-              this.toastr.error(error.error);
+              this.toastr.error(error.error.Message);
             }
           });
         this.isEditable = false;
@@ -75,9 +79,9 @@ export class MaintenancePaymentComponent {
               });
             },
             error: (error) => {
-              this.toastr.error(error.error);
+              this.toastr.error(error.error.Message);
             }
-          })
+          });
         this.isEditable = true;
         this.paymentForm.enable();
       }
@@ -105,7 +109,7 @@ export class MaintenancePaymentComponent {
             ]);
           },
           error: (error) => {
-            this.toastr.error(error.error);
+            this.toastr.error(error.error.Message);
           }
         })
     }
@@ -143,7 +147,7 @@ export class MaintenancePaymentComponent {
             this.paymentForm.disable();
           },
           error: (error) => {
-            this.toastr.error(error.error);
+            this.toastr.error(error.error.Message);
           }
         });
     } else {
@@ -161,7 +165,7 @@ export class MaintenancePaymentComponent {
             this.paymentForm.disable();
           },
           error: (error) => {
-            this.toastr.error(error.error);
+            this.toastr.error(error.error.Message);
           }
         });
     }

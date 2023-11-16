@@ -50,6 +50,10 @@ export class MaintenanceContractComponent {
   }
 
   ngOnInit(): void {
+    this.refreshPageData();
+  }
+
+  private refreshPageData() {
     this.route.paramMap
       .subscribe({
         next: (params) => {
@@ -83,12 +87,12 @@ export class MaintenanceContractComponent {
                 }
               },
               error: (error) => {
-                this.toastr.error(error.error);
+                this.toastr.error(error.error.Message);
               },
             });
         },
         error: (error) => {
-          this.toastr.error(error.error);
+          this.toastr.error(error.error.Message);
         },
       });
   }
@@ -135,7 +139,7 @@ export class MaintenanceContractComponent {
             this.router.navigate([`/stores`]);
           },
           error: (error) => {
-            this.toastr.error(error.error);
+            this.toastr.error(error.error.Message);
           },
         });
     }
@@ -163,7 +167,7 @@ export class MaintenanceContractComponent {
             this.isEditable = false;
           },
           error: (error) => {
-            this.toastr.error(error.error);
+            this.toastr.error(error.error.Message);
           },
         });
     } else {
@@ -183,7 +187,7 @@ export class MaintenanceContractComponent {
             this.isEditable = false;
           },
           error: (error) => {
-            this.toastr.error(error.error);
+            this.toastr.error(error.error.Message);
           },
         });
     }
