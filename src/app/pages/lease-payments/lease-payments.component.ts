@@ -29,6 +29,7 @@ export class LeasePaymentsComponent implements OnInit {
     this.refreshPageData();
   }
 
+  // Get lease payments data
   private refreshPageData() {
     this.route.paramMap
       .subscribe({

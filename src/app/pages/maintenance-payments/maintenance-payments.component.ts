@@ -30,6 +30,7 @@ export class MaintenancePaymentsComponent {
     this.refreshPageData();
   }
 
+  // Get the initial page data
   private refreshPageData() {
     this.route.paramMap
       .subscribe({

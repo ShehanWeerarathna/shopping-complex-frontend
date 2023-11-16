@@ -43,6 +43,7 @@ export class MaintenancePaymentComponent {
     this.refreshPageData();
   }
 
+  // Get initial page data
   private refreshPageData() {
     this.route.paramMap.subscribe((params) => {
       this.maintenanceContractId = Number(params.get('maintenanceContractId'));

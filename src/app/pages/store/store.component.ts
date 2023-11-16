@@ -37,6 +37,7 @@ export class StoreComponent implements OnInit {
     this.refreshPageData();
   }
 
+  // Get initial page data
   private refreshPageData() {
     this.getCategories();
     this.route.paramMap

@@ -24,6 +24,7 @@ export class StoreListComponent implements OnInit {
     this.getCategories();
   }
 
+  // Get the categories for the dropdown list
   getCategories() {
     this.storeService.getCategoryListAsync()
     .subscribe({
@@ -57,6 +58,7 @@ export class StoreListComponent implements OnInit {
       });
   }
 
+  // set selected store name to signal
   setSelectedStoreName(storeName: string) {
     storeNameSignal.set(storeName);
   }

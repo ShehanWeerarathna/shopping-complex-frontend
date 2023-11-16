@@ -53,6 +53,7 @@ export class MaintenanceContractComponent {
     this.refreshPageData();
   }
 
+  // Get initial page data
   private refreshPageData() {
     this.route.paramMap
       .subscribe({
