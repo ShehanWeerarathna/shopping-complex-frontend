@@ -2,8 +2,8 @@
   <h2>Maintenance Contract - {{ storeName }}</h2>
 </div>
 <form [formGroup]="maintenanceContractForm">
-  <div class="row">
-    <div class="col-sm-6 mb-3">
+  <div class="form-group">
+
       <label for="contractAmount" class="form-label">Amount:</label>
       <input
         class="form-control"
@@ -32,10 +32,9 @@
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="row">
-    <div class="col-sm-6 mb-3">
+
+  <div class="form-group">
       <label for="contractStartDate" class="form-label">Start Date:</label>
       <div class="input-group">
         <input
@@ -73,11 +72,9 @@
           Start date is required.
         </div>
       </div>
-    </div>
   </div>
 
-  <div class="row">
-    <div class="col-sm-6 mb-3">
+  <div class="form-group">
       <label for="contractEndDate" class="form-label">End Date:</label>
       <div class="input-group">
         <input
@@ -116,7 +113,6 @@
           End date is required.
         </div>
       </div>
-    </div>
   </div>
 
   <ng-template [ngIf]="isEditable" [ngIfElse]="notEditable">
