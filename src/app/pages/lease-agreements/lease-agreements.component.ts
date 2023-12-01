@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { storeNameSignal } from 'src/app/common/common.signals';
 import { LeaseAgreement, PagedData } from 'src/app/common/common.types';
 import { LeaseAgreementService } from 'src/app/services/lease-agreement.service';
+import { StoreService } from 'src/app/services/store.service';
 
 @Component({
   selector: 'app-lease-agreements',
@@ -14,7 +14,7 @@ export class LeaseAgreementsComponent implements OnInit {
   currentPage: number = 1;
   pageSize: number = 10;
 
-  constructor(private leaseAgreementService: LeaseAgreementService, private toastr: ToastrService) {}
+  constructor(private leaseAgreementService: LeaseAgreementService, private toastr: ToastrService, private storeService: StoreService) {}
 
   ngOnInit(): void {
     this.refreshLeaseAgreementList();
@@ -39,7 +39,8 @@ export class LeaseAgreementsComponent implements OnInit {
   // Set the store name in the common.signals.ts file .
   setSelectedStoreName(storeName?: string) {
     if (storeName) {
-      storeNameSignal.set(storeName);
+      // storeNameSignal.set(storeName);
+      this.storeService.updateStoreName(storeName);
     }
   }
 }

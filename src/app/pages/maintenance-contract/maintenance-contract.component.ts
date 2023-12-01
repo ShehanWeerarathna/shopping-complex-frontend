@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -6,9 +6,10 @@ import {
   NgbDateStruct,
 } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { storeNameSignal } from 'src/app/common/common.signals';
+import { Subscription } from 'rxjs';
 import { MaintenanceContract } from 'src/app/common/common.types';
 import { MaintenanceContractService } from 'src/app/services/maintenance-contract.service';
+import { StoreService } from 'src/app/services/store.service';
 
 const today: Date = new Date();
 
@@ -17,7 +18,7 @@ const today: Date = new Date();
   templateUrl: './maintenance-contract.component.html',
   styleUrls: ['./maintenance-contract.component.css'],
 })
-export class MaintenanceContractComponent {
+export class MaintenanceContractComponent implements OnInit, OnDestroy {
   storeIdParam: string | null = '';
   maintenanceContract: MaintenanceContract = {} as MaintenanceContract;
   isEditable: boolean = false;
@@ -45,13 +46,28 @@ export class MaintenanceContractComponent {
     private maintenanceContractService: MaintenanceContractService,
     private router: Router,
     public formatter: NgbDateParserFormatter,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private storeService: StoreService
   ) {
-    this.storeName = storeNameSignal();
+    // this.storeName = storeNameSignal();
   }
+
+  private storeNameSubscription = new Subscription();
 
   ngOnInit(): void {
     this.refreshPageData();
+    this.storeNameSubscription = this.storeService.storeName$.subscribe({
+      next: (storeName) => {
+        this.storeName = storeName;
+      },
+      error: (error) => {
+        this.toastr.error(error.error.Message);
+      },
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.storeNameSubscription.unsubscribe();
   }
 
   // Get initial page data

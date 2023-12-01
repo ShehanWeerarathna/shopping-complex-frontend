@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -6,9 +6,10 @@ import {
   NgbDateStruct,
 } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { storeNameSignal } from 'src/app/common/common.signals';
+import { Subscription } from 'rxjs';
 import { LeaseAgreement } from 'src/app/common/common.types';
 import { LeaseAgreementService } from 'src/app/services/lease-agreement.service';
+import { StoreService } from 'src/app/services/store.service';
 
 const today: Date = new Date();
 
@@ -17,7 +18,7 @@ const today: Date = new Date();
   templateUrl: './lease-agreement.component.html',
   styleUrls: ['./lease-agreement.component.css'],
 })
-export class LeaseAgreementComponent implements OnInit {
+export class LeaseAgreementComponent implements OnInit, OnDestroy {
   storeIdParam: string | null = '';
   leaseAgreement: LeaseAgreement = {} as LeaseAgreement;
   isEditable: boolean = false;
@@ -45,13 +46,25 @@ export class LeaseAgreementComponent implements OnInit {
     private leaseAgreementService: LeaseAgreementService,
     private router: Router,
     public formatter: NgbDateParserFormatter,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private storeService: StoreService
   ) {
-    this.storeName = storeNameSignal();
+    // this.storeName = storeNameSignal();
   }
+
+  private storeNameSubscription = new Subscription();
 
   ngOnInit(): void {
     this.refreshPageData();
+    this.storeNameSubscription = this.storeService.storeName$.subscribe({
+      next: (data) => {
+        this.storeName = data;
+      },
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.storeNameSubscription.unsubscribe();
   }
 
   private refreshPageData() {

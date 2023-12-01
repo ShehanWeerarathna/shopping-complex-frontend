@@ -7,9 +7,13 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'shopping-complex-frontend';
-  navBarCollapsed: "collapse"|"" = "collapse";
+  isNavbarCollapsed = true;
 
   toggleNavBar(){
-    this.navBarCollapsed = this.navBarCollapsed == "collapse" ? "" : "collapse";
+    this.isNavbarCollapsed = !this.isNavbarCollapsed;
+  }
+
+  closeNavBar(){
+    this.isNavbarCollapsed = true;
   }
 }

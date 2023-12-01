@@ -1,15 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { storeNameSignal } from 'src/app/common/common.signals';
+import { Subscription } from 'rxjs';
 import { PagedData, MaintenanceContract } from 'src/app/common/common.types';
 import { MaintenanceContractService } from 'src/app/services/maintenance-contract.service';
+import { StoreService } from 'src/app/services/store.service';
 
 @Component({
   selector: 'app-maintenance-contracts',
   templateUrl: './maintenance-contracts.component.html',
   styleUrls: ['./maintenance-contracts.component.css'],
 })
-export class MaintenanceContractsComponent {
+export class MaintenanceContractsComponent implements OnInit {
   pagedList: PagedData<MaintenanceContract> =
     {} as PagedData<MaintenanceContract>;
   currentPage: number = 1;
@@ -17,12 +18,16 @@ export class MaintenanceContractsComponent {
 
   constructor(
     private maintenanceContractService: MaintenanceContractService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private storeService: StoreService
   ) {}
+
+
 
   ngOnInit(): void {
     this.refreshMaintenanceContractList();
   }
+
 
   // Refresh the maintenance contract list.
   refreshMaintenanceContractList() {
@@ -43,7 +48,8 @@ export class MaintenanceContractsComponent {
   // Set the store name in the common.signals.ts .
   setSelectedStoreName(storeName?: string) {
     if (storeName) {
-      storeNameSignal.set(storeName);
+      // storeNameSignal.set(storeName);
+      this.storeService.updateStoreName(storeName);
     }
   }
 }

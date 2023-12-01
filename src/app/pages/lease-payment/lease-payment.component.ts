@@ -1,18 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDateParserFormatter, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
-import { storeNameSignal } from 'src/app/common/common.signals';
+import { Subscription } from 'rxjs';
 import { LeasePayment } from 'src/app/common/common.types';
 import { LeasePaymentService } from 'src/app/services/lease-payment.service';
+import { StoreService } from 'src/app/services/store.service';
 const today: Date = new Date();
 @Component({
   selector: 'app-lease-payment',
   templateUrl: './lease-payment.component.html',
   styleUrls: ['./lease-payment.component.css'],
 })
-export class LeasePaymentComponent implements OnInit {
+export class LeasePaymentComponent implements OnInit, OnDestroy {
   leaseAgreementId: number = 0;
   paymentIdParam: string | null = '';
   isNewPayment: boolean = false;
@@ -34,12 +35,28 @@ export class LeasePaymentComponent implements OnInit {
     private leasePaymentService: LeasePaymentService,
     private router: Router,
     public formatter: NgbDateParserFormatter,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private storeService: StoreService
   ) {
-    this.storeName = storeNameSignal();
+    // this.storeName = storeNameSignal();
   }
+  
+  private storeNameSubscription = new Subscription();
   ngOnInit(): void {
     this.refreshPageData();
+    this.storeNameSubscription = this.storeService.storeName$.subscribe({
+      next: (storeName) => {
+        this.storeName = storeName;
+      },
+      error: (error) => {
+        this.toastr.error(error.error.Message);
+      },
+    });
+
+  }
+
+  ngOnDestroy(): void {
+    this.storeNameSubscription.unsubscribe();
   }
 
   // Get the lease payment data

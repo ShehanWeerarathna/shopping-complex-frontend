@@ -1,16 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { storeNameSignal } from 'src/app/common/common.signals';
+import { Subscription } from 'rxjs';
 import { PagedData, MaintenancePayment } from 'src/app/common/common.types';
 import { MaintenancePaymentService } from 'src/app/services/maintenance-payment.service';
+import { StoreService } from 'src/app/services/store.service';
 
 @Component({
   selector: 'app-maintenance-payments',
   templateUrl: './maintenance-payments.component.html',
   styleUrls: ['./maintenance-payments.component.css'],
 })
-export class MaintenancePaymentsComponent {
+export class MaintenancePaymentsComponent implements OnInit, OnDestroy {
   pagedList: PagedData<MaintenancePayment> =
     {} as PagedData<MaintenancePayment>;
   currentPage: number = 1;
@@ -21,13 +22,28 @@ export class MaintenancePaymentsComponent {
   constructor(
     private route: ActivatedRoute,
     private maintenancePaymentService: MaintenancePaymentService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private storeService: StoreService
   ) {
-    this.storeName = storeNameSignal();
+    // this.storeName = storeNameSignal();
   }
+
+  private storeNameSubscription = new Subscription();
 
   ngOnInit(): void {
     this.refreshPageData();
+    this.storeNameSubscription = this.storeService.storeName$.subscribe({
+      next: (storeName) => {
+        this.storeName = storeName;
+      },
+      error: (error) => {
+        this.toastr.error(error.error.Message);
+      },
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.storeNameSubscription.unsubscribe();
   }
 
   // Get the initial page data

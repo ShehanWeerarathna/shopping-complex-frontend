@@ -22,6 +22,7 @@ import { MaintenancePaymentComponent } from './pages/maintenance-payment/mainten
 import { MaintenancePaymentsComponent } from './pages/maintenance-payments/maintenance-payments.component';
 
 import { ToastrModule } from 'ngx-toastr';
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 
 
 @NgModule({
@@ -37,7 +38,8 @@ import { ToastrModule } from 'ngx-toastr';
     MaintenanceContractComponent,
     MaintenanceContractsComponent,
     MaintenancePaymentComponent,
-    MaintenancePaymentsComponent
+    MaintenancePaymentsComponent,
+    ConfirmDialogComponent
   ],
   imports: [
     NgbModule,
